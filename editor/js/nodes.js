@@ -1417,6 +1417,9 @@ RED.nodes = (function() {
             } else {
                 setDirty(d);
             }
-        }
+        },
+        // monkey patch start
+        getNode: getNode,
+        // monkey patch end
     };
 })();
