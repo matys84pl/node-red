@@ -125,12 +125,20 @@
         <label for="node-input-name" data-i18n="[append]editor:common.label.name"><i class="fa fa-tag"></i> </label>
         <input type="text" id="node-input-name">
     </div>
+    <div class="form-row">
+        <label for="node-input-configNodeName">Configuration<i class="fa fa-tag"></i> </label>
+        <input type="text" id="node-input-configNodeName">
+    </div>
 </script>
 
 <script type="text/x-red" data-template-name="subflow-template">
     <div class="form-row">
         <i class="fa fa-tag"></i>
         <label for="subflow-input-name" data-i18n="common.label.name"></label><input type="text" id="subflow-input-name">
+    </div>
+    <div class="form-row">
+        <i class="fa fa-tag"></i>
+        <label for="subflow-input-config">Config node</label><input type="text" id="subflow-input-config">
     </div>
     <div class="form-row">
         <i class="fa fa-folder-o"></i>
