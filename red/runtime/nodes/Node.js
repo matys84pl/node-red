@@ -32,9 +32,13 @@ function Node(n) {
     if (n.name) {
         this.name = n.name;
     }
+    if (n.configNodeId) {
+        this.configNodeId = n.configNodeId;
+    }
     if (n._alias) {
         this._alias = n._alias;
     }
+
     this.updateWires(n.wires);
 }
 
@@ -233,6 +237,9 @@ function log_helper(self, level, msg) {
     }
     if (self.name) {
         o.name = self.name;
+    }
+    if (self.configNodeId) {
+        o.configNodeId = self.configNodeId;
     }
     Log.log(o);
 }

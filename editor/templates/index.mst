@@ -124,10 +124,11 @@
     <div class="form-row">
         <label for="node-input-name" data-i18n="[append]editor:common.label.name"><i class="fa fa-tag"></i> </label>
         <input type="text" id="node-input-name">
+        <button id="copy-config-name-button">Copy name from config</button>
     </div>
     <div class="form-row">
-        <label for="node-input-configNodeName">Configuration<i class="fa fa-tag"></i> </label>
-        <input type="text" id="node-input-configNodeName">
+        <label for="node-input-configNodeId" data-i18n="[append]editor:common.label.configuration"><i class="fa fa-tag"></i> </label>
+        <input type="text" id="node-input-configNodeId">
     </div>
 </script>
 
@@ -138,7 +139,7 @@
     </div>
     <div class="form-row">
         <i class="fa fa-tag"></i>
-        <label for="subflow-input-config">Config node</label><input type="text" id="subflow-input-config">
+        <label for="subflow-input-config">Config node</label><select style="width: 250px;" id="subflow-input-config"></select>
     </div>
     <div class="form-row">
         <i class="fa fa-folder-o"></i>

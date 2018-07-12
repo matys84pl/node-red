@@ -56,6 +56,8 @@ module.exports = function(RED) {
     function FunctionNode(n) {
         RED.nodes.createNode(this,n);
         var node = this;
+        var configNode = RED.nodes.getNode(n.configNodeId);
+        var config = configNode ? configNode.config : null;
         this.name = n.name;
         this.func = n.func;
         var functionText = "var results = null;"+
@@ -64,6 +66,7 @@ module.exports = function(RED) {
                               "var node = {"+
                                  "id:__node__.id,"+
                                  "name:__node__.name,"+
+                                 "config:__node__.config,"+
                                  "log:__node__.log,"+
                                  "error:__node__.error,"+
                                  "warn:__node__.warn,"+
@@ -89,6 +92,7 @@ module.exports = function(RED) {
             __node__: {
                 id: node.id,
                 name: node.name,
+                config: config,
                 log: function() {
                     node.log.apply(node, arguments);
                 },

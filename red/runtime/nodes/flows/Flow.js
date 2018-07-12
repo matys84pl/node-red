@@ -319,7 +319,6 @@ function createNode(type,config) {
 }
 
 function createSubflow(sf,sfn,subflows,globalSubflows,activeNodes) {
-    //console.log("CREATE SUBFLOW",sf.id,sfn.id);
     var nodes = [];
     var node_map = {};
     var newNodes = [];
@@ -328,12 +327,14 @@ function createSubflow(sf,sfn,subflows,globalSubflows,activeNodes) {
     var i,j,k;
 
     var createNodeInSubflow = function(def) {
+        console.log('createNodeInSubflow', def.type, sfn.configNodeId);
         node = clone(def);
         var nid = redUtil.generateId();
         node_map[node.id] = node;
         node._alias = node.id;
         node.id = nid;
         node.z = sfn.id;
+        node.configNodeId = sfn.configNodeId;
         newNodes.push(node);
     }
 
@@ -386,8 +387,10 @@ function createSubflow(sf,sfn,subflows,globalSubflows,activeNodes) {
         type: sfn.type,
         z: sfn.z,
         name: sfn.name,
+        configNodeId: sfn.configNodeId,
         wires: []
     }
+    console.log('subflow instance', sf.configNodeId, sfn.configNodeId)
     if (sf.in) {
         subflowInstance.wires = sf.in.map(function(n) { return n.wires.map(function(w) { return node_map[w.id].id;})})
         subflowInstance._originalWires = clone(subflowInstance.wires);

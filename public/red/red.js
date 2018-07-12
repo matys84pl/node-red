@@ -2672,11 +2672,10 @@ RED.nodes = (function() {
             sf.name = subflowName;
         }
         subflows[sf.id] = sf;
-        console.error('add subflow:', sf)
         RED.nodes.registerType("subflow:"+sf.id, {
             defaults:{
                 name:{value:""},
-                configNodeName:{type: sf.configNodeName},
+                configNodeId:{type: sf.configNodeId},
             },
             info: sf.info,
             icon: function() { return sf.icon||"subflow.png" },
@@ -2844,7 +2843,7 @@ RED.nodes = (function() {
         node.name = n.name;
         node.info = n.info;
         node.category = n.category;
-        node.configNodeName = n.configNodeName;
+        node.configNodeId = n.configNodeId;
         node.in = [];
         node.out = [];
 
@@ -3745,6 +3744,7 @@ RED.nodes = (function() {
         },
         // monkey patch start
         getNode: getNode,
+        getConfigNodes: function () { return configNodes },
         // monkey patch end
     };
 })();
@@ -11287,7 +11287,6 @@ RED.view = (function() {
             }
         } else {
             var subflow = RED.nodes.subflow(m[1]);
-            console.error('addNode subflow', subflow)
             nn.name = "";
             nn.inputs = subflow.in.length;
             nn.outputs = subflow.out.length;
@@ -16294,8 +16293,8 @@ RED.palette.editor = (function() {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-RED.editor = (function() {
 
+RED.editor = (function() {
 
     var editStack = [];
     var editing_node = null;
@@ -16315,7 +16314,6 @@ RED.editor = (function() {
      * @returns {boolean} whether the node is valid. Sets node.dirty if needed
      */
     function validateNode(node) {
-        console.error('validate', node, node.valid);
         var oldValue = node.valid;
         var oldChanged = node.changed;
         node.valid = true;
@@ -16323,26 +16321,21 @@ RED.editor = (function() {
         var isValid;
         var hasChanged;
         if (node.type.indexOf("subflow:")===0) {
-            console.error('subflow:instance' )
             subflow = RED.nodes.subflow(node.type.substring(8));
             isValid = subflow.valid;
             hasChanged = subflow.changed;
             if (isValid === undefined) {
-                console.error('validate subflow', subflow)
                 isValid = validateNode(subflow);
                 hasChanged = subflow.changed;
             }
-            console.error('subflow def is invalid');
             node.valid = isValid && validateNodeProperties(node, node._def.defaults, node);
             node.changed = node.changed || hasChanged;
         } else if (node._def) {
-            console.error('ndoe def')
             node.valid = validateNodeProperties(node, node._def.defaults, node);
             if (node._def._creds) {
                 node.valid = node.valid && validateNodeProperties(node, node._def.credentials, node._def._creds);
             }
         } else if (node.type == "subflow") {
-            console.error('subflow')
             var subflowNodes = RED.nodes.filterNodes({z:node.id});
             for (var i=0;i<subflowNodes.length;i++) {
                 isValid = subflowNodes[i].valid;
@@ -16408,7 +16401,7 @@ RED.editor = (function() {
      * @returns {boolean} whether the node proprty is valid
      */
     function validateNodeProperty(node,definition,property,value) {
-        debugger
+        //debugger
         var valid = true;
         if (/^\$\([a-zA-Z_][a-zA-Z0-9_]*\)$/.test(value)) {
             return true;
@@ -16431,7 +16424,6 @@ RED.editor = (function() {
                 valid = (configNode !== null && (configNode.valid == null || configNode.valid));
             }
         }
-        console.error('validateNodeProperty', node, definition, property, value, valid);
         return valid;
     }
 
@@ -16475,7 +16467,6 @@ RED.editor = (function() {
      * @returns {array} the links that were removed due to this update
      */
     function updateNodeProperties(node, outputMap) {
-        console.error('updateNodeProperties', node, outputMap);
         node.resize = true;
         node.dirty = true;
         var removedLinks = [];
@@ -16523,7 +16514,6 @@ RED.editor = (function() {
      */
     function prepareConfigNodeSelect(node,property,type,prefix) {
         var input = $("#"+prefix+"-"+property);
-        console.error('prepareConfigNodeSelect', node, property, type, prefix, input.length === 0)
         if (input.length === 0 ) {
             return;
         }
@@ -16715,7 +16705,6 @@ RED.editor = (function() {
      * @param prefix - the prefix to use in the input element ids (node-input|node-config-input)
      */
     function prepareEditDialog(node,definition,prefix,done) {
-        console.error('prepareEditDialog', node, definition)
         for (var d in definition.defaults) {
             if (definition.defaults.hasOwnProperty(d)) {
                 if (definition.defaults[d].type) {
@@ -17254,7 +17243,6 @@ RED.editor = (function() {
                     text: RED._("common.label.done"),
                     class: "primary",
                     click: function() {
-                        console.error('ok click')
                         var changes = {};
                         var changed = false;
                         var wasDirty = RED.nodes.dirty();
@@ -17457,7 +17445,6 @@ RED.editor = (function() {
                             }
                             RED.history.push(historyEvent);
                         }
-                        console.error('historyEvent', historyEvent)
                         editing_node.dirty = true;
                         validateNode(editing_node);
                         RED.events.emit("editor:save",editing_node);
@@ -17961,8 +17948,6 @@ RED.editor = (function() {
         RED.view.state(RED.state.EDITING);
         var subflowEditor;
 
-        console.error('showEditSubflowDialog', subflow);
-
         var trayOptions = {
             title: getEditStackTitle(),
             buttons: [
@@ -17991,12 +17976,13 @@ RED.editor = (function() {
                             changed = true;
                         }
 
-                        var newNodeConfigName = $("#subflow-input-config").val();
+                        var newNodeConfigId = $("#subflow-input-config").val();
 
-                        if (newNodeConfigName != editing_node.configNodeName) {
-                            changes['configNodeName'] = editing_node.configNodeName;
-                            editing_node.configNodeName = newNodeConfigName;
-                            editing_node._def.defaults.configNodeName.type = newNodeConfigName;
+                        if (newNodeConfigId != editing_node.configNodeId) {
+                            changes['configNodeId'] = editing_node.configNodeId;
+                            console.error('newNodeConfigId', newNodeConfigId)
+                            editing_node.configNodeId = newNodeConfigId;
+                            editing_node._def.defaults.configNodeId.type = newNodeConfigId;
                             changed = true;
                         }
 
@@ -18035,24 +18021,18 @@ RED.editor = (function() {
 
                         RED.palette.refresh();
 
-                        console.error('changes', changes);
-
                         if (changed) {
                             var wasChanged = editing_node.changed;
                             editing_node.changed = true;
-                            console.error('editing node:', editing_node)
                             validateNode(editing_node);
                             var subflowInstances = [];
                             RED.nodes.eachNode(function(n) {
-                                console.error('all nodes',n.type, editing_node.id, n.type == "subflow:"+editing_node.id)
                                 if (n.type == "subflow:"+editing_node.id) {
-                                    console.error('subflow instance that will be updated', n);
                                     subflowInstances.push({
                                         id:n.id,
                                         changed:n.changed
                                     })
                                     n._def = editing_node._def;
-                                    console.error('new definition', n._def);
                                     n.changed = true;
                                     n.dirty = true;
                                     updateNodeProperties(n);
@@ -18123,8 +18103,18 @@ RED.editor = (function() {
 
                 $("#subflow-input-name").val(subflow.name);
                 RED.text.bidi.prepareInput($("#subflow-input-name"));
-                $("#subflow-input-config").val(subflow.configNodeName);
-                RED.text.bidi.prepareInput($("#subflow-input-config"));
+
+                /*$("#subflow-input-config").val(subflow.configNodeId);
+                RED.text.bidi.prepareInput($("#subflow-input-config"));*/
+
+                $("#subflow-input-config").empty();
+                var configs = RED.nodes.getConfigNodes();
+
+                console.error('configs', configs)
+                Object.values(configs).forEach(function(config) {
+                    $("#subflow-input-config").append($("<option></option>").val(config.id).text(config.type));
+                })
+                $("#subflow-input-config").val(subflow.configNodeId);
 
                 $("#subflow-input-category").empty();
                 var categories = RED.palette.getCategories();
@@ -21102,7 +21092,6 @@ RED.subflow = (function() {
         refreshToolbar(activeSubflow);
         var subflowInstances = [];
         if (activeSubflow) {
-            console.error('this subflow changed', activeSubflow)
             RED.nodes.filterNodes({type:"subflow:"+activeSubflow.id}).forEach(function(n) {
                 subflowInstances.push({
                     id: n.id,
@@ -21113,8 +21102,8 @@ RED.subflow = (function() {
                 }
                 n.inputs = activeSubflow.in.length;
                 n.outputs = activeSubflow.out.length;
-                console.error(n.configNodeName, activeSubflow.configNodeName);
-                n.configNodeName = activeSubflow.configNodeName;
+                n.configNodeId = activeSubflow.configNodeId;
+
                 while (n.outputs < n.ports.length) {
                     n.ports.pop();
                 }

@@ -352,11 +352,10 @@ RED.nodes = (function() {
             sf.name = subflowName;
         }
         subflows[sf.id] = sf;
-        console.error('add subflow:', sf)
         RED.nodes.registerType("subflow:"+sf.id, {
             defaults:{
                 name:{value:""},
-                configNodeName:{type: sf.configNodeName},
+                configNodeId:{type: sf.configNodeId},
             },
             info: sf.info,
             icon: function() { return sf.icon||"subflow.png" },
@@ -524,7 +523,7 @@ RED.nodes = (function() {
         node.name = n.name;
         node.info = n.info;
         node.category = n.category;
-        node.configNodeName = n.configNodeName;
+        node.configNodeId = n.configNodeId;
         node.in = [];
         node.out = [];
 
@@ -1425,6 +1424,7 @@ RED.nodes = (function() {
         },
         // monkey patch start
         getNode: getNode,
+        getConfigNodes: function () { return configNodes },
         // monkey patch end
     };
 })();

@@ -188,7 +188,6 @@ RED.subflow = (function() {
         refreshToolbar(activeSubflow);
         var subflowInstances = [];
         if (activeSubflow) {
-            console.error('this subflow changed', activeSubflow)
             RED.nodes.filterNodes({type:"subflow:"+activeSubflow.id}).forEach(function(n) {
                 subflowInstances.push({
                     id: n.id,
@@ -199,8 +198,8 @@ RED.subflow = (function() {
                 }
                 n.inputs = activeSubflow.in.length;
                 n.outputs = activeSubflow.out.length;
-                console.error(n.configNodeName, activeSubflow.configNodeName);
-                n.configNodeName = activeSubflow.configNodeName;
+                n.configNodeId = activeSubflow.configNodeId;
+
                 while (n.outputs < n.ports.length) {
                     n.ports.pop();
                 }

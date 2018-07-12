@@ -14,7 +14,8 @@
             "back": "Back",
             "next": "Next",
             "clone": "Clone project",
-            "cont": "Continue"
+            "cont": "Continue",
+            "configuration": "Configuration"
         }
     },
     "workspace": {
