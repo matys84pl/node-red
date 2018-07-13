@@ -47,6 +47,7 @@ RED.nodes = (function() {
                 label: {value:""},
                 disabled: {value: false},
                 info: {value: ""}
+
             }
         };
 
@@ -70,6 +71,18 @@ RED.nodes = (function() {
             },
             getNodeTypes: function() {
                 return Object.keys(nodeDefinitions);
+            },
+            getNodeDefinitions: function() {
+                return nodeDefinitions;
+            },
+            getConfigNodes: function () {
+                var configs = [];
+                Object.keys(nodeDefinitions).forEach(function (key) {
+                    if (nodeDefinitions[key].category === "config") {
+                        configs.push(nodeDefinitions[key]);
+                    }
+                });
+                return configs;
             },
             setNodeList: function(list) {
                 nodeList = [];
@@ -335,6 +348,7 @@ RED.nodes = (function() {
     }
 
     function addSubflow(sf, createNewIds) {
+        console.debug('editor/notes, addSubflow')
         if (createNewIds) {
             var subflowNames = Object.keys(subflows).map(function(sfid) {
                 return subflows[sfid].name;
@@ -352,10 +366,12 @@ RED.nodes = (function() {
             sf.name = subflowName;
         }
         subflows[sf.id] = sf;
+        console.error(sf.isInject)
         RED.nodes.registerType("subflow:"+sf.id, {
             defaults:{
                 name:{value:""},
                 configNodeId:{type: sf.configNodeId},
+                isInject:{value: false}
             },
             info: sf.info,
             icon: function() { return sf.icon||"subflow.png" },
@@ -363,6 +379,29 @@ RED.nodes = (function() {
             inputs: sf.in.length,
             outputs: sf.out.length,
             color: "#da9",
+            button: sf.isInject ? {
+                enabled: sf.isInject,
+                onclick: function () {
+                    $.ajax({
+                        url: "subflowInject/"+this.id,
+                        type:"POST",
+                        success: function(resp) {
+                            //RED.notify(node._("inject.success",{label:label}),"success");
+                        },
+                        error: function(jqXHR,textStatus,errorThrown) {
+                            /*if (jqXHR.status == 404) {
+                                RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.not-deployed")}),"error");
+                            } else if (jqXHR.status == 500) {
+                                RED.notify(node._("common.notification.error",{message:node._("inject.errors.failed")}),"error");
+                            } else if (jqXHR.status == 0) {
+                                RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.no-response")}),"error");
+                            } else {
+                                RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.unexpected",{status:jqXHR.status,message:textStatus})}),"error");
+                            }*/
+                        }
+                    });
+                }
+            } : undefined,
             label: function() { return this.name||RED.nodes.subflow(sf.id).name },
             labelStyle: function() { return this.name?"node_label_italic":""; },
             paletteLabel: function() { return RED.nodes.subflow(sf.id).name },
@@ -373,6 +412,8 @@ RED.nodes = (function() {
             }
         });
         sf._def = RED.nodes.getType("subflow:"+sf.id);
+        console.error('sf def', sf._def)
+        setDirty(true);
     }
     function getSubflow(id) {
         return subflows[id];
@@ -524,6 +565,7 @@ RED.nodes = (function() {
         node.info = n.info;
         node.category = n.category;
         node.configNodeId = n.configNodeId;
+        node.isInject = n.isInject;
         node.in = [];
         node.out = [];
 
@@ -1424,7 +1466,7 @@ RED.nodes = (function() {
         },
         // monkey patch start
         getNode: getNode,
-        getConfigNodes: function () { return configNodes },
+        getConfigNodes: registry.getConfigNodes,
         // monkey patch end
     };
 })();

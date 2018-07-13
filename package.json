@@ -13,7 +13,7 @@
     "start": "node red.js",
     "test": "grunt",
     "build": "grunt build",
-    "dev": "grunt watch"
+    "dev": "grunt build && grunt watch"
   },
   "bin": {
     "node-red": "./red.js",

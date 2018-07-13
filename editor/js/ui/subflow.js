@@ -199,6 +199,7 @@ RED.subflow = (function() {
                 n.inputs = activeSubflow.in.length;
                 n.outputs = activeSubflow.out.length;
                 n.configNodeId = activeSubflow.configNodeId;
+                n.isInject = activeSubflow.isInject;
 
                 while (n.outputs < n.ports.length) {
                     n.ports.pop();
@@ -208,6 +209,7 @@ RED.subflow = (function() {
                 RED.editor.updateNodeProperties(n);
             });
             RED.editor.validateNode(activeSubflow);
+            console.error('subflowInstances', subflowInstances)
             return {
                 instances: subflowInstances
             }

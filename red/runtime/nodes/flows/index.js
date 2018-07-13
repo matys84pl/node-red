@@ -31,6 +31,7 @@ var deprecated = require("../registry/deprecated");
 
 var storage = null;
 var settings = null;
+var runtimeRef = null;
 
 var activeConfig = null;
 var activeFlowConfig = null;
@@ -50,6 +51,7 @@ function init(runtime) {
     }
     settings = runtime.settings;
     storage = runtime.storage;
+    runtimeRef = runtime;
     started = false;
     if (!typeEventRegistered) {
         events.on('type-registered',function(type) {
@@ -292,12 +294,12 @@ function start(type,diff,muteLog) {
     if (type === "full") {
         if (!activeFlows['global']) {
             log.debug("red/nodes/flows.start : starting flow : global");
-            activeFlows['global'] = Flow.create(activeFlowConfig);
+            activeFlows['global'] = Flow.create(activeFlowConfig, activeFlowConfig, runtimeRef);
         }
         for (id in activeFlowConfig.flows) {
             if (activeFlowConfig.flows.hasOwnProperty(id)) {
                 if (!activeFlowConfig.flows[id].disabled && !activeFlows[id]) {
-                    activeFlows[id] = Flow.create(activeFlowConfig,activeFlowConfig.flows[id]);
+                    activeFlows[id] = Flow.create(activeFlowConfig,activeFlowConfig.flows[id], runtimeRef);
                     log.debug("red/nodes/flows.start : starting flow : "+id);
                 } else {
                     log.debug("red/nodes/flows.start : not starting disabled flow : "+id);
@@ -312,7 +314,7 @@ function start(type,diff,muteLog) {
                     if (activeFlows[id]) {
                         activeFlows[id].update(activeFlowConfig,activeFlowConfig.flows[id]);
                     } else {
-                        activeFlows[id] = Flow.create(activeFlowConfig,activeFlowConfig.flows[id]);
+                        activeFlows[id] = Flow.create(activeFlowConfig,activeFlowConfig.flows[id], runtimeRef);
                         log.debug("red/nodes/flows.start : starting flow : "+id);
                     }
                 } else {

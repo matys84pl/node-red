@@ -23,7 +23,7 @@ var Log = require("../log");
 var context = require("./context");
 var flows = require("./flows");
 
-function Node(n) {
+function Node(n, runtime) {
     this.id = n.id;
     this.type = n.type;
     this.z = n.z;
@@ -35,6 +35,21 @@ function Node(n) {
     if (n.configNodeId) {
         this.configNodeId = n.configNodeId;
     }
+    console.error('NEW NODE', n.isInject, n.type)
+    this.isInject = n.isInject;
+    var node = this;
+    if (this.isInject) {
+        runtime.adminApi.adminApp.post("/subflowInject/" + this.id, runtime.adminApi.auth.needsPermission("inject.write"), function (req, res) {
+            console.error('YEAH!!!!');
+            try {
+                node.receive({ payload: 'yeah!'});
+                res.sendStatus(200);
+            } catch (err) {
+                res.sendStatus(500);
+                node.error(runtime._("inject.failed", {error: err.toString()}));
+            }
+        })
+    }
     if (n._alias) {
         this._alias = n._alias;
     }
@@ -44,19 +59,20 @@ function Node(n) {
 
 util.inherits(Node, EventEmitter);
 
-Node.prototype.updateWires = function(wires) {
+Node.prototype.updateWires = function (wires) {
     //console.log("UPDATE",this.id);
     this.wires = wires || [];
     delete this._wire;
 
     var wc = 0;
-    this.wires.forEach(function(w) {
-        wc+=w.length;
+    this.wires.forEach(function (w) {
+        wc += w.length;
     });
     this._wireCount = wc;
     if (wc === 0) {
         // With nothing wired to the node, no-op send
-        this.send = function(msg) {}
+        this.send = function (msg) {
+        }
     } else {
         this.send = Node.prototype.send;
         if (this.wires.length === 1 && this.wires[0].length === 1) {
@@ -67,16 +83,16 @@ Node.prototype.updateWires = function(wires) {
     }
 
 }
-Node.prototype.context = function() {
+Node.prototype.context = function () {
     if (!this._context) {
-        this._context = context.get(this._alias||this.id,this.z);
+        this._context = context.get(this._alias || this.id, this.z);
     }
     return this._context;
 }
 
 Node.prototype._on = Node.prototype.on;
 
-Node.prototype.on = function(event, callback) {
+Node.prototype.on = function (event, callback) {
     var node = this;
     if (event == "close") {
         this._closeCallbacks.push(callback);
@@ -85,15 +101,15 @@ Node.prototype.on = function(event, callback) {
     }
 };
 
-Node.prototype.close = function(removed) {
+Node.prototype.close = function (removed) {
     //console.log(this.type,this.id,removed);
     var promises = [];
     var node = this;
-    for (var i=0;i<this._closeCallbacks.length;i++) {
+    for (var i = 0; i < this._closeCallbacks.length; i++) {
         var callback = this._closeCallbacks[i];
         if (callback.length > 0) {
             promises.push(
-                when.promise(function(resolve) {
+                when.promise(function (resolve) {
                     var args = [];
                     if (callback.length === 2) {
                         args.push(!!removed);
@@ -107,20 +123,20 @@ Node.prototype.close = function(removed) {
         }
     }
     if (promises.length > 0) {
-        return when.settle(promises).then(function() {
+        return when.settle(promises).then(function () {
             if (this._context) {
-                 context.delete(this._alias||this.id,this.z);
+                context.delete(this._alias || this.id, this.z);
             }
         });
     } else {
         if (this._context) {
-             context.delete(this._alias||this.id,this.z);
+            context.delete(this._alias || this.id, this.z);
         }
         return;
     }
 };
 
-Node.prototype.send = function(msg) {
+Node.prototype.send = function (msg) {
     var msgSent = false;
     var node;
 
@@ -134,7 +150,7 @@ Node.prototype.send = function(msg) {
             if (!msg._msgid) {
                 msg._msgid = redUtil.generateId();
             }
-            this.metric("send",msg);
+            this.metric("send", msg);
             node = flows.get(this._wire);
             /* istanbul ignore else */
             if (node) {
@@ -179,9 +195,9 @@ Node.prototype.send = function(msg) {
                                 }
                                 if (msgSent) {
                                     var clonedmsg = redUtil.cloneMessage(m);
-                                    sendEvents.push({n:node,m:clonedmsg});
+                                    sendEvents.push({n: node, m: clonedmsg});
                                 } else {
-                                    sendEvents.push({n:node,m:m});
+                                    sendEvents.push({n: node, m: m});
                                     msgSent = true;
                                 }
                             }
@@ -195,9 +211,9 @@ Node.prototype.send = function(msg) {
     if (!sentMessageId) {
         sentMessageId = redUtil.generateId();
     }
-    this.metric("send",{_msgid:sentMessageId});
+    this.metric("send", {_msgid: sentMessageId});
 
-    for (i=0;i<sendEvents.length;i++) {
+    for (i = 0; i < sendEvents.length; i++) {
         var ev = sendEvents[i];
         /* istanbul ignore else */
         if (!ev.m._msgid) {
@@ -207,18 +223,18 @@ Node.prototype.send = function(msg) {
     }
 };
 
-Node.prototype.receive = function(msg) {
+Node.prototype.receive = function (msg) {
     if (!msg) {
         msg = {};
     }
     if (!msg._msgid) {
         msg._msgid = redUtil.generateId();
     }
-    this.metric("receive",msg);
+    this.metric("receive", msg);
     try {
         this.emit("input", msg);
-    } catch(err) {
-        this.error(err,msg);
+    } catch (err) {
+        this.error(err, msg);
     }
 };
 
@@ -241,49 +257,52 @@ function log_helper(self, level, msg) {
     if (self.configNodeId) {
         o.configNodeId = self.configNodeId;
     }
+    if (self.isInject) {
+        o.isInject = self.isInject;
+    }
     Log.log(o);
 }
 
-Node.prototype.log = function(msg) {
+Node.prototype.log = function (msg) {
     log_helper(this, Log.INFO, msg);
 };
 
-Node.prototype.warn = function(msg) {
+Node.prototype.warn = function (msg) {
     log_helper(this, Log.WARN, msg);
 };
 
-Node.prototype.error = function(logMessage,msg) {
+Node.prototype.error = function (logMessage, msg) {
     if (typeof logMessage != 'boolean') {
         logMessage = logMessage || "";
     }
     var handled = false;
     if (msg) {
-        handled = flows.handleError(this,logMessage,msg);
+        handled = flows.handleError(this, logMessage, msg);
     }
     if (!handled) {
         log_helper(this, Log.ERROR, logMessage);
     }
 };
 
-Node.prototype.debug = function(msg) {
+Node.prototype.debug = function (msg) {
     log_helper(this, Log.DEBUG, msg);
 }
 
-Node.prototype.trace = function(msg) {
+Node.prototype.trace = function (msg) {
     log_helper(this, Log.TRACE, msg);
 }
 
 /**
  * If called with no args, returns whether metric collection is enabled
  */
-Node.prototype.metric = function(eventname, msg, metricValue) {
+Node.prototype.metric = function (eventname, msg, metricValue) {
     if (typeof eventname === "undefined") {
         return Log.metric();
     }
     var metrics = {};
     metrics.level = Log.METRIC;
     metrics.nodeid = this.id;
-    metrics.event = "node."+this.type+"."+eventname;
+    metrics.event = "node." + this.type + "." + eventname;
     metrics.msgid = msg._msgid;
     metrics.value = metricValue;
     Log.log(metrics);
@@ -292,7 +311,7 @@ Node.prototype.metric = function(eventname, msg, metricValue) {
 /**
  * status: { fill:"red|green", shape:"dot|ring", text:"blah" }
  */
-Node.prototype.status = function(status) {
-    flows.handleStatus(this,status);
+Node.prototype.status = function (status) {
+    flows.handleStatus(this, status);
 };
 module.exports = Node;

@@ -23,10 +23,8 @@ var flowUtil = require("./util");
 
 var nodeCloseTimeout = 15000;
 
-function Flow(global,flow) {
-    if (typeof flow === 'undefined') {
-        flow = global;
-    }
+function Flow(global,flow, runtime) {
+    console.error(runtime)
     var activeNodes = {};
     var subflowInstanceNodes = {};
     var catchNodeMap = {};
@@ -94,7 +92,7 @@ function Flow(global,flow) {
                 } else {
                     if (!subflowInstanceNodes[id]) {
                         try {
-                            var nodes = createSubflow(flow.subflows[node.subflow]||global.subflows[node.subflow],node,flow.subflows,global.subflows,activeNodes);
+                            var nodes = createSubflow(flow.subflows[node.subflow]||global.subflows[node.subflow],node,flow.subflows,global.subflows, activeNodes, runtime);
                             subflowInstanceNodes[id] = nodes.map(function(n) { return n.id});
                             for (var i=0;i<nodes.length;i++) {
                                 if (nodes[i]) {
@@ -318,7 +316,7 @@ function createNode(type,config) {
     return nn;
 }
 
-function createSubflow(sf,sfn,subflows,globalSubflows,activeNodes) {
+function createSubflow(sf,sfn,subflows,globalSubflows,activeNodes, runtime) {
     var nodes = [];
     var node_map = {};
     var newNodes = [];
@@ -327,7 +325,7 @@ function createSubflow(sf,sfn,subflows,globalSubflows,activeNodes) {
     var i,j,k;
 
     var createNodeInSubflow = function(def) {
-        console.log('createNodeInSubflow', def.type, sfn.configNodeId);
+        console.error('createNodeInSubflow', def.type, sfn.configNodeId);
         node = clone(def);
         var nid = redUtil.generateId();
         node_map[node.id] = node;
@@ -380,6 +378,8 @@ function createSubflow(sf,sfn,subflows,globalSubflows,activeNodes) {
         }
     }
 
+    console.error('subflow:', sfn, sf)
+
     // Create a subflow node to accept inbound messages and route appropriately
     var Node = require("../Node");
     var subflowInstance = {
@@ -387,15 +387,16 @@ function createSubflow(sf,sfn,subflows,globalSubflows,activeNodes) {
         type: sfn.type,
         z: sfn.z,
         name: sfn.name,
-        configNodeId: sfn.configNodeId,
+        configNodeId: sf.configNodeId,
+        isInject: sf.isInject,
         wires: []
     }
-    console.log('subflow instance', sf.configNodeId, sfn.configNodeId)
+    console.error('subflow instance', sf.configNodeId, sfn.configNodeId)
     if (sf.in) {
         subflowInstance.wires = sf.in.map(function(n) { return n.wires.map(function(w) { return node_map[w.id].id;})})
         subflowInstance._originalWires = clone(subflowInstance.wires);
     }
-    var subflowNode = new Node(subflowInstance);
+    var subflowNode = new Node(subflowInstance, runtime);
 
     subflowNode.on("input", function(msg) { this.send(msg);});
 
@@ -484,7 +485,7 @@ function createSubflow(sf,sfn,subflows,globalSubflows,activeNodes) {
             }
         } else {
             var subflowId = m[1];
-            nodes = nodes.concat(createSubflow(subflows[subflowId]||globalSubflows[subflowId],node,subflows,globalSubflows,activeNodes));
+            nodes = nodes.concat(createSubflow(subflows[subflowId]||globalSubflows[subflowId],node,subflows,globalSubflows,activeNodes, runtime));
         }
     }
 
@@ -501,7 +502,7 @@ module.exports = {
     init: function(settings) {
         nodeCloseTimeout = settings.nodeCloseTimeout || 15000;
     },
-    create: function(global,conf) {
-        return new Flow(global,conf);
+    create: function(global,conf, runtime) {
+        return new Flow(global,conf, runtime);
     }
 }

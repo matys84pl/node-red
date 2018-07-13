@@ -70,6 +70,7 @@ RED.editor = (function() {
             var subflowInstances = RED.nodes.filterNodes({type:"subflow:"+node.id});
             var modifiedTabs = {};
             for (i=0;i<subflowInstances.length;i++) {
+                console.error('subflowInstances[i]', subflowInstances[i])
                 subflowInstances[i].valid = node.valid;
                 subflowInstances[i].changed = subflowInstances[i].changed || node.changed;
                 subflowInstances[i].dirty = true;
@@ -1700,9 +1701,62 @@ RED.editor = (function() {
 
                         if (newNodeConfigId != editing_node.configNodeId) {
                             changes['configNodeId'] = editing_node.configNodeId;
-                            console.error('newNodeConfigId', newNodeConfigId)
                             editing_node.configNodeId = newNodeConfigId;
                             editing_node._def.defaults.configNodeId.type = newNodeConfigId;
+                            changed = true;
+                        }
+
+                        var newNodeIsInject = $('#subflow-input-inject').prop("checked");
+
+                        if (newNodeIsInject != editing_node.isInject) {
+                            changes['isInject'] = editing_node.isInject;
+                            editing_node.isInject = newNodeIsInject;
+                            editing_node._def.button = newNodeIsInject ? editing_node._def.button || {} : null;
+                            if (editing_node._def.button) {
+                                editing_node._def.button.enabled = true;
+                                editing_node._def.button.onclick =  function () {
+                                    debugger
+                                };
+                                    /*
+                                    var label = this.name||"debug";
+                                    var node = this;
+                                    $.ajax({
+                                        url: "debug/"+this.id+"/"+(this.active?"enable":"disable"),
+                                        type: "POST",
+                                        success: function(resp, textStatus, xhr) {
+                                            var historyEvent = {
+                                                t:'edit',
+                                                node:node,
+                                                changes:{
+                                                    active: !node.active
+                                                },
+                                                dirty:node.dirty,
+                                                changed:node.changed
+                                            };
+                                            node.changed = true;
+                                            node.dirty = true;
+                                            RED.nodes.dirty(true);
+                                            RED.history.push(historyEvent);
+                                            RED.view.redraw();
+                                            if (xhr.status == 200) {
+                                                RED.notify(node._("debug.notification.activated",{label:label}),"success");
+                                            } else if (xhr.status == 201) {
+                                                RED.notify(node._("debug.notification.deactivated",{label:label}),"success");
+                                            }
+                                        },
+                                        error: function(jqXHR,textStatus,errorThrown) {
+                                            if (jqXHR.status == 404) {
+                                                RED.notify(node._("common.notification.error", {message: node._("common.notification.errors.not-deployed")}),"error");
+                                            } else if (jqXHR.status === 0) {
+                                                RED.notify(node._("common.notification.error", {message: node._("common.notification.errors.no-response")}),"error");
+                                            } else {
+                                                RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.unexpected",{status:err.status,message:err.response})}),"error");
+                                            }
+                                        }
+                                    });
+                                    */
+                            }
+                            editing_node._def.defaults.isInject.value = newNodeIsInject;
                             changed = true;
                         }
 
@@ -1824,17 +1878,15 @@ RED.editor = (function() {
                 $("#subflow-input-name").val(subflow.name);
                 RED.text.bidi.prepareInput($("#subflow-input-name"));
 
-                /*$("#subflow-input-config").val(subflow.configNodeId);
-                RED.text.bidi.prepareInput($("#subflow-input-config"));*/
-
                 $("#subflow-input-config").empty();
                 var configs = RED.nodes.getConfigNodes();
-
-                console.error('configs', configs)
-                Object.values(configs).forEach(function(config) {
-                    $("#subflow-input-config").append($("<option></option>").val(config.id).text(config.type));
+                configs.forEach(function(config) {
+                    $("#subflow-input-config").append($("<option></option>").val(config.type).text(config.type));
                 })
                 $("#subflow-input-config").val(subflow.configNodeId);
+
+                $('#subflow-input-inject').prop("checked", subflow.isInject);
+
 
                 $("#subflow-input-category").empty();
                 var categories = RED.palette.getCategories();

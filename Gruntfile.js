@@ -264,7 +264,8 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: [
-                    'editor/js/**/*.js'
+                    'editor/js/**/*.js',
+                    'red/**/*.js'
                 ],
                 tasks: ['copy:build','concat','uglify','attachCopyright:js']
             },
