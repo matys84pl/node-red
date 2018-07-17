@@ -2686,10 +2686,10 @@ RED.nodes = (function() {
             sf.name = subflowName;
         }
         subflows[sf.id] = sf;
-        console.error(sf.isInject)
+
         RED.nodes.registerType("subflow:"+sf.id, {
             defaults:{
-                name:{value:""},
+                name:{value: ''},
                 configNodeId:{type: sf.configNodeId},
                 isInject:{value: false}
             },
@@ -2702,8 +2702,9 @@ RED.nodes = (function() {
             button: sf.isInject ? {
                 enabled: sf.isInject,
                 onclick: function () {
+                    console.error('click!!!')
                     $.ajax({
-                        url: "subflowInput/"+this.id,
+                        url: "nodeInput/"+this.id,
                         type:"POST",
                         success: function(resp) {
                             //RED.notify(node._("inject.success",{label:label}),"success");
@@ -12578,7 +12579,6 @@ RED.view = (function() {
     }
 
     function isButtonEnabled(d) {
-        console.error('isButtonEnabled', d)
         var buttonEnabled = true;
         if (d._def.button.hasOwnProperty('enabled')) {
             if (typeof d._def.button.enabled === "function") {
@@ -12597,9 +12597,7 @@ RED.view = (function() {
                 d[d._def.button.toggle] = !d[d._def.button.toggle];
                 d.dirty = true;
             }
-            console.error('does it have onlickc? ', d._def.button.onclick)
             if (d._def.button.onclick) {
-                console.error('yes')
                 try {
                     d._def.button.onclick.call(d);
                 } catch(err) {
@@ -18209,6 +18207,8 @@ RED.editor = (function() {
                 configs.forEach(function(config) {
                     $("#subflow-input-config").append($("<option></option>").val(config.type).text(config.type));
                 })
+                // TODO: co do cholery?
+                //$("#subflow-input-config").val(subflow.configNodeName);
                 $("#subflow-input-config").val(subflow.configNodeId);
 
                 $('#subflow-input-inject').prop("checked", subflow.isInject);

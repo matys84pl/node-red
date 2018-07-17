@@ -366,10 +366,10 @@ RED.nodes = (function() {
             sf.name = subflowName;
         }
         subflows[sf.id] = sf;
-        console.error(sf.isInject)
+
         RED.nodes.registerType("subflow:"+sf.id, {
             defaults:{
-                name:{value:""},
+                name:{value: ''},
                 configNodeId:{type: sf.configNodeId},
                 isInject:{value: false}
             },
@@ -382,8 +382,9 @@ RED.nodes = (function() {
             button: sf.isInject ? {
                 enabled: sf.isInject,
                 onclick: function () {
+                    console.error('click!!!')
                     $.ajax({
-                        url: "subflowInput/"+this.id,
+                        url: "nodeInput/"+this.id,
                         type:"POST",
                         success: function(resp) {
                             //RED.notify(node._("inject.success",{label:label}),"success");

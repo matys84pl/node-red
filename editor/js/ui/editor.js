@@ -1883,6 +1883,8 @@ RED.editor = (function() {
                 configs.forEach(function(config) {
                     $("#subflow-input-config").append($("<option></option>").val(config.type).text(config.type));
                 })
+                // TODO: co do cholery?
+                //$("#subflow-input-config").val(subflow.configNodeName);
                 $("#subflow-input-config").val(subflow.configNodeId);
 
                 $('#subflow-input-inject').prop("checked", subflow.isInject);

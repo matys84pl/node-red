@@ -14,75 +14,78 @@
  * limitations under the License.
  **/
 
-var util = require("util");
-var EventEmitter = require("events").EventEmitter;
-var when = require("when");
+const util = require("util");
+const EventEmitter = require("events").EventEmitter;
+const when = require("when");
+const redUtil = require("../util");
+const Log = require("../log");
+const context = require("./context");
+const flows = require("./flows");
 
-var redUtil = require("../util");
-var Log = require("../log");
-var context = require("./context");
-var flows = require("./flows");
+let nodesCount = 0;
 
 function Node(n, runtime) {
-    this.runtime = runtime;
     this.id = n.id;
-    this.type = n.type;
-    this.z = n.z;
-    this._closeCallbacks = [];
+    this.type = n.type; // function, debug, custom type
+    this.name = n.name; // node's name
+    this.parentId = this.z = n.z; // ibm, wtf is z?
+    this.runtime = runtime; // hack: runtime to handle post requests
+    this.configNodeId = n.configNodeId; // id of the configuration node
+    this.isInject = n.isInject; // whether the node has a button in the admin
 
-    if (n.name) {
-        this.name = n.name;
+    if (this.configNodeId && runtime) {
+        const configNode = runtime.nodes.getNode(n.configNodeId);
+        Log.debug('configNode', this.configNodeId, configNode);
     }
-    if (n.configNodeId) {
-        this.configNodeId = n.configNodeId;
-    }
-    console.error('NEW NODE', n.isInject, n.type)
-    this.isInject = n.isInject;
-    var node = this;
-    if (this.isInject && runtime) {
-        runtime.adminApi.adminApp.post("/subflowInput/" + this.id, runtime.adminApi.auth.needsPermission("inject.write"), function (req, res) {
-            try {
-                node.receive({ payload: 'yeah!'});
-                res.sendStatus(200);
-            } catch (err) {
-                res.sendStatus(500);
-                node.error(runtime._("inject.failed", {error: err.toString()}));
-            }
-        })
-    }
-    if (n._alias) {
-        this._alias = n._alias;
-    }
+
+    this._closeCallbacks = [];
+    this._alias = n._alias;
+
+    Log.debug(`Creating new node [${nodesCount++}]`, {
+        id: this.id,
+        type: this.type,
+        isInject: this.isInject,
+    });
 
     if (runtime) {
-        runtime.adminApi.adminApp.post("/subflowStatus/" + this.id, runtime.adminApi.auth.needsPermission("inject.write"), function (req, res) {
-            try {
-                node.status({
-                    fill: "blue",
-                    shape: "ring",
-                    text: "Open"
-                })
-                res.sendStatus(200);
-            } catch (err) {
-                res.sendStatus(500);
-                node.error(runtime._("inject.failed", {error: err.toString()}));
-            }
-        })
+        const {
+            auth,
+            adminApp,
+        } = runtime.adminApi;
+
+        adminApp.post(`/nodeInput/${this.id}`, auth.needsPermission("inject.write"), this.handleInputRequest.bind(this));
+        adminApp.post(`/nodeStatus/${this.id}`, auth.needsPermission("inject.write"), this.handleStatusRequest.bind(this));
     }
 
-    this.status({
-        fill: "green",
-        shape: "ring",
-        text: "Open"
-    })
-
     this.updateWires(n.wires);
+}
+
+Node.prototype.handleInputRequest = function (req, res) {
+    try {
+        Log.debug('Node received input REST request');
+        this.receive({ payload: Math.random() * 10 });
+        res.sendStatus(200);
+    } catch (err) {
+        res.sendStatus(500);
+        this.error(runtime._("inject.failed", {error: err.toString()}));
+    }
+}
+
+Node.prototype.handleStatusRequest = function (req, res) {
+    try {
+        Log.debug('Node received status REST request');
+        this.status(req.body);
+        res.sendStatus(200);
+    } catch (err) {
+        res.sendStatus(500);
+        this.error(runtime._("status.failed", {error: err.toString()}));
+    }
 }
 
 util.inherits(Node, EventEmitter);
 
 Node.prototype.updateWires = function (wires) {
-    //console.log("UPDATE",this.id);
+    console.log("UPDATE",this.id, this.configNodeId);
     this.wires = wires || [];
     delete this._wire;
 
@@ -103,8 +106,8 @@ Node.prototype.updateWires = function (wires) {
             this._wire = this.wires[0][0];
         }
     }
-
 }
+
 Node.prototype.context = function () {
     if (!this._context) {
         this._context = context.get(this._alias || this.id, this.z);
@@ -336,4 +339,14 @@ Node.prototype.metric = function (eventname, msg, metricValue) {
 Node.prototype.status = function (status) {
     flows.handleStatus(this, status);
 };
+
+/**
+ * Sets the status on the parent (to be used within subflows)
+ * @param status
+ */
+Node.prototype.parentStatus = function (status) {
+    const parentNode = flows.get(this.parentId);
+    flows.handleStatus(parentNode, status);
+};
+
 module.exports = Node;

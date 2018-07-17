@@ -60,13 +60,14 @@ module.exports = function(RED) {
         var config = configNode ? configNode.config : null;
         this.name = n.name;
         this.func = n.func;
-        console.error('runtime', Boolean(runtime))
+        console.error('configNodeId', n.configNodeId)
         var functionText = "var results = null;"+
                            "results = (function(msg){ "+
                               "var __msgid__ = msg._msgid;"+
                               "var node = {"+
                                  "id:__node__.id,"+
                                  "name:__node__.name,"+
+                                 "parentId:__node__.parentId,"+
                                  "config:__node__.config,"+
                                  "log:__node__.log,"+
                                  "error:__node__.error,"+
@@ -75,6 +76,7 @@ module.exports = function(RED) {
                                  "trace:__node__.trace,"+
                                  "on:__node__.on,"+
                                  "status:__node__.status,"+
+                                 "parentStatus:__node__.parentStatus,"+
                                  "send:function(msgs){ __node__.send(__msgid__,msgs);}"+
                               "};\n"+
                               this.func+"\n"+
@@ -120,9 +122,13 @@ module.exports = function(RED) {
                     node.on.apply(node, arguments);
                 },
                 status: function() {
-                    console.error('wtf??', Boolean(runtime))
+                    console.error('parent status')
                     node.status.apply(node, arguments);
-                }
+                },
+                parentStatus: function() {
+                    console.error('parent status')
+                    node.parentStatus.apply(node, arguments);
+                },
             },
             context: {
                 set: function() {

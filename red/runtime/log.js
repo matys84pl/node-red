@@ -20,14 +20,14 @@ var EventEmitter = require("events").EventEmitter;
 var i18n = require("./i18n");
 
 var levels = {
-    off:    1,
-    fatal:  10,
-    error:  20,
-    warn:   30,
-    info:   40,
-    debug:  50,
-    trace:  60,
-    audit:  98,
+    off: 1,
+    fatal: 10,
+    error: 20,
+    warn: 30,
+    info: 40,
+    debug: 50,
+    trace: 60,
+    audit: 98,
     metric: 99
 };
 
@@ -48,15 +48,15 @@ var verbose;
 
 var metricsEnabled = false;
 
-var LogHandler = function(settings) {
-    this.logLevel  = settings ? levels[settings.level]||levels.info : levels.info;
-    this.metricsOn = settings ? settings.metrics||false : false;
-    this.auditOn = settings ? settings.audit||false : false;
+var LogHandler = function (settings) {
+    this.logLevel = settings ? levels[settings.level] || levels.info : levels.info;
+    this.metricsOn = settings ? settings.metrics || false : false;
+    this.auditOn = settings ? settings.audit || false : false;
 
     metricsEnabled = metricsEnabled || this.metricsOn;
 
-    this.handler   = (settings && settings.handler) ? settings.handler(settings) : consoleLogger;
-    this.on("log",function(msg) {
+    this.handler = (settings && settings.handler) ? settings.handler(settings) : consoleLogger;
+    this.on("log", function (msg) {
         if (this.shouldReportMessage(msg.level)) {
             this.handler(msg);
         }
@@ -64,39 +64,40 @@ var LogHandler = function(settings) {
 }
 util.inherits(LogHandler, EventEmitter);
 
-LogHandler.prototype.shouldReportMessage = function(msglevel) {
+LogHandler.prototype.shouldReportMessage = function (msglevel) {
     return (msglevel == log.METRIC && this.metricsOn) ||
-           (msglevel == log.AUDIT && this.auditOn) ||
-           msglevel <= this.logLevel;
+        (msglevel == log.AUDIT && this.auditOn) ||
+        msglevel <= this.logLevel;
 }
 
-var consoleLogger = function(msg) {
+var consoleLogger = function (msg) {
     if (msg.level == log.METRIC || msg.level == log.AUDIT) {
-        util.log("["+levelNames[msg.level]+"] "+JSON.stringify(msg));
+        util.log("[" + levelNames[msg.level] + "] " + JSON.stringify(msg));
     } else {
         if (verbose && msg.msg && msg.msg.stack) {
-            util.log("["+levelNames[msg.level]+"] "+(msg.type?"["+msg.type+":"+(msg.name||msg.id)+"] ":"")+msg.msg.stack);
+            util.log("[" + levelNames[msg.level] + "] " + (msg.type ? "[" + msg.type + ":" + (msg.name || msg.id) + "] " : "") + msg.msg.stack);
         } else {
             var message = msg.msg;
+            var data = JSON.stringify(msg.data);
             if (typeof message === 'object' && message !== null && message.toString() === '[object Object]' && message.message) {
                 message = message.message;
             }
-            util.log("["+levelNames[msg.level]+"] "+(msg.type?"["+msg.type+":"+(msg.name||msg.id)+"] ":"")+message);
+            util.log("[" + levelNames[msg.level] + "] " + (msg.type ? "[" + msg.type + ":" + (msg.name || msg.id) + "] " : "") + message + (data ? (' ' + data) : ''));
         }
     }
 }
 
 var log = module.exports = {
-    FATAL:  10,
-    ERROR:  20,
-    WARN:   30,
-    INFO:   40,
-    DEBUG:  50,
-    TRACE:  60,
-    AUDIT:  98,
+    FATAL: 10,
+    ERROR: 20,
+    WARN: 30,
+    INFO: 40,
+    DEBUG: 50,
+    TRACE: 60,
+    AUDIT: 98,
     METRIC: 99,
 
-    init: function(settings) {
+    init: function (settings) {
         metricsEnabled = false;
         logHandlers = [];
         var loggerSettings = {};
@@ -106,7 +107,7 @@ var log = module.exports = {
             if (keys.length === 0) {
                 log.addHandler(new LogHandler());
             } else {
-                for (var i=0, l=keys.length; i<l; i++) {
+                for (var i = 0, l = keys.length; i < l; i++) {
                     var config = settings.logging[keys[i]];
                     loggerSettings = config || {};
                     if ((keys[i] === "console") || config.handler) {
@@ -118,41 +119,41 @@ var log = module.exports = {
             log.addHandler(new LogHandler());
         }
     },
-    addHandler: function(func) {
+    addHandler: function (func) {
         logHandlers.push(func);
     },
-    removeHandler: function(func) {
+    removeHandler: function (func) {
         var index = logHandlers.indexOf(func);
         if (index > -1) {
-            logHandlers.splice(index,1);
+            logHandlers.splice(index, 1);
         }
     },
-    log: function(msg) {
+    log: function (msg) {
         msg.timestamp = Date.now();
-        logHandlers.forEach(function(handler) {
-            handler.emit("log",msg);
+        logHandlers.forEach(function (handler) {
+            handler.emit("log", msg);
         });
     },
-    info: function(msg) {
-        log.log({level:log.INFO,msg:msg});
+    info: function (msg, data) {
+        log.log({level: log.INFO, msg, data});
     },
-    warn: function(msg) {
-        log.log({level:log.WARN,msg:msg});
+    warn: function (msg, data) {
+        log.log({level: log.WARN, msg, data});
     },
-    error: function(msg) {
-        log.log({level:log.ERROR,msg:msg});
+    error: function (msg, data) {
+        log.log({level: log.ERROR, msg, data});
     },
-    trace: function(msg) {
-        log.log({level:log.TRACE,msg:msg});
+    trace: function (msg, data) {
+        log.log({level: log.TRACE, msg, data});
     },
-    debug: function(msg) {
-        log.log({level:log.DEBUG,msg:msg});
+    debug: function (msg, data) {
+        log.log({level: log.DEBUG, msg, data});
     },
-    metric: function() {
+    metric: function () {
         return metricsEnabled;
     },
 
-    audit: function(msg,req) {
+    audit: function (msg, req) {
         msg.level = log.AUDIT;
         if (req) {
             msg.user = req.user;

@@ -120,6 +120,8 @@
         </div>
     </form>
 </div>
+
+<!-- subflow instance -->
 <script type="text/x-red" data-template-name="subflow">
     <div class="form-row">
         <label for="node-input-name" data-i18n="[append]editor:common.label.name"><i class="fa fa-tag"></i> </label>
@@ -132,6 +134,7 @@
     </div>
 </script>
 
+<!-- subflow -->
 <script type="text/x-red" data-template-name="subflow-template">
     <div class="form-row">
         <i class="fa fa-tag"></i>

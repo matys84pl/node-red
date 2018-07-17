@@ -1753,7 +1753,6 @@ RED.view = (function() {
     }
 
     function isButtonEnabled(d) {
-        console.error('isButtonEnabled', d)
         var buttonEnabled = true;
         if (d._def.button.hasOwnProperty('enabled')) {
             if (typeof d._def.button.enabled === "function") {
@@ -1772,9 +1771,7 @@ RED.view = (function() {
                 d[d._def.button.toggle] = !d[d._def.button.toggle];
                 d.dirty = true;
             }
-            console.error('does it have onlickc? ', d._def.button.onclick)
             if (d._def.button.onclick) {
-                console.error('yes')
                 try {
                     d._def.button.onclick.call(d);
                 } catch(err) {
