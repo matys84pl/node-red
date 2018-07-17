@@ -383,7 +383,7 @@ RED.nodes = (function() {
                 enabled: sf.isInject,
                 onclick: function () {
                     $.ajax({
-                        url: "subflowInject/"+this.id,
+                        url: "subflowInput/"+this.id,
                         type:"POST",
                         success: function(resp) {
                             //RED.notify(node._("inject.success",{label:label}),"success");

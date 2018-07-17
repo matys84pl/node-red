@@ -84,7 +84,7 @@ function Flow(global,flow, runtime) {
                 node = flow.nodes[id];
                 if (!node.subflow) {
                     if (!activeNodes[id]) {
-                        newNode = createNode(node.type,node);
+                        newNode = createNode(node.type,node, runtime);
                         if (newNode) {
                             activeNodes[id] = newNode;
                         }
@@ -288,7 +288,7 @@ function Flow(global,flow, runtime) {
     }
 }
 
-function createNode(type,config) {
+function createNode(type,config, runtime) {
     var nn = null;
     var nt = typeRegistry.get(type);
     if (nt) {
@@ -300,7 +300,7 @@ function createNode(type,config) {
             }
         }
         try {
-            nn = new nt(conf);
+            nn = new nt(conf, runtime);
         }
         catch (err) {
             Log.log({

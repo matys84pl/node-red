@@ -53,13 +53,14 @@ module.exports = function(RED) {
         }
     }
 
-    function FunctionNode(n) {
+    function FunctionNode(n, runtime) {
         RED.nodes.createNode(this,n);
         var node = this;
         var configNode = RED.nodes.getNode(n.configNodeId);
         var config = configNode ? configNode.config : null;
         this.name = n.name;
         this.func = n.func;
+        console.error('runtime', Boolean(runtime))
         var functionText = "var results = null;"+
                            "results = (function(msg){ "+
                               "var __msgid__ = msg._msgid;"+
@@ -82,6 +83,7 @@ module.exports = function(RED) {
         this.outstandingTimers = [];
         this.outstandingIntervals = [];
         var sandbox = {
+            runtime:runtime,
             console:console,
             util:util,
             Buffer:Buffer,
@@ -118,6 +120,7 @@ module.exports = function(RED) {
                     node.on.apply(node, arguments);
                 },
                 status: function() {
+                    console.error('wtf??', Boolean(runtime))
                     node.status.apply(node, arguments);
                 }
             },

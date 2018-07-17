@@ -24,6 +24,7 @@ var context = require("./context");
 var flows = require("./flows");
 
 function Node(n, runtime) {
+    this.runtime = runtime;
     this.id = n.id;
     this.type = n.type;
     this.z = n.z;
@@ -38,9 +39,8 @@ function Node(n, runtime) {
     console.error('NEW NODE', n.isInject, n.type)
     this.isInject = n.isInject;
     var node = this;
-    if (this.isInject) {
-        runtime.adminApi.adminApp.post("/subflowInject/" + this.id, runtime.adminApi.auth.needsPermission("inject.write"), function (req, res) {
-            console.error('YEAH!!!!');
+    if (this.isInject && runtime) {
+        runtime.adminApi.adminApp.post("/subflowInput/" + this.id, runtime.adminApi.auth.needsPermission("inject.write"), function (req, res) {
             try {
                 node.receive({ payload: 'yeah!'});
                 res.sendStatus(200);
@@ -53,6 +53,28 @@ function Node(n, runtime) {
     if (n._alias) {
         this._alias = n._alias;
     }
+
+    if (runtime) {
+        runtime.adminApi.adminApp.post("/subflowStatus/" + this.id, runtime.adminApi.auth.needsPermission("inject.write"), function (req, res) {
+            try {
+                node.status({
+                    fill: "blue",
+                    shape: "ring",
+                    text: "Open"
+                })
+                res.sendStatus(200);
+            } catch (err) {
+                res.sendStatus(500);
+                node.error(runtime._("inject.failed", {error: err.toString()}));
+            }
+        })
+    }
+
+    this.status({
+        fill: "green",
+        shape: "ring",
+        text: "Open"
+    })
 
     this.updateWires(n.wires);
 }
