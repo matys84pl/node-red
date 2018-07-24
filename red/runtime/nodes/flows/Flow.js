@@ -320,6 +320,7 @@ function createNode(type, config, runtime) {
 }
 
 function createSubflow(sf, sfn, subflows, globalSubflows, activeNodes, runtime) {
+    console.error('create subflow')
     var nodes = [];
     var node_map = {};
     var newNodes = [];
@@ -334,13 +335,17 @@ function createSubflow(sf, sfn, subflows, globalSubflows, activeNodes, runtime) 
         node._alias = node.id;
         node.id = nid;
         node.z = sfn.id;
+        node.configNodeName = sfn.configNodeName;
         node.configNodeId = sfn.configNodeId;
+        node.action = sfn.action;
+        node.actions = sfn.actions;
         newNodes.push(node);
 
         Log.debug('Creating node in subflow', {
             id: node.id,
             type: def.type,
             configNodeId: node.configNodeId,
+            configNodeName: node.configNodeName,
         })
     }
 
@@ -395,6 +400,7 @@ function createSubflow(sf, sfn, subflows, globalSubflows, activeNodes, runtime) 
         name: sfn.name,
         configNodeId: sf.configNodeId,
         isInject: sf.isInject,
+        actions: sf.actions,
         wires: []
     }
     if (sf.in) {

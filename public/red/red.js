@@ -2689,9 +2689,10 @@ RED.nodes = (function() {
 
         RED.nodes.registerType("subflow:"+sf.id, {
             defaults:{
-                name:{value: ''},
-                configNodeId:{type: sf.configNodeId},
-                isInject:{value: false}
+                name:{value: sf.name},
+                configNodeId:{type: sf.configNodeName},
+                isInject:{value: false},
+                actions:{value: sf.actions}
             },
             info: sf.info,
             icon: function() { return sf.icon||"subflow.png" },
@@ -2811,6 +2812,11 @@ RED.nodes = (function() {
         node.id = n.id;
         node.type = n.type;
         node.z = n.z;
+        node.action = n.action;
+        node.actions = n.actions;
+        node.isInject = n.isInject;
+        node.configNodeName = n.configNodeName;
+        node.configNodeId = n.configNodeId;
 
         if (node.type == "unknown") {
             for (var p in n._orig) {
@@ -2885,8 +2891,10 @@ RED.nodes = (function() {
         node.name = n.name;
         node.info = n.info;
         node.category = n.category;
+        node.configNodeName = n.configNodeName;
         node.configNodeId = n.configNodeId;
         node.isInject = n.isInject;
+        node.actions = n.actions;
         node.in = [];
         node.out = [];
 
@@ -3168,6 +3176,7 @@ RED.nodes = (function() {
         // Find all tabs and subflow templates
         for (i=0;i<newNodes.length;i++) {
             n = newNodes[i];
+            n = newNodes[i];
             // TODO: remove workspace in next release+1
             if (n.type === "workspace" || n.type === "tab") {
                 if (n.type === "workspace") {
@@ -3365,6 +3374,10 @@ RED.nodes = (function() {
                         node.name = n.name;
                         node.outputs = subflow.out.length;
                         node.inputs = subflow.in.length;
+                        node.actions = n.actions;
+                        node.isInject = n.isInject;
+                        node.configNodeName = n.configNodeName;
+                        node.configNodeId = n.configNodeId;
                     } else {
                         if (!node._def) {
                             if (node.x && node.y) {
@@ -3442,6 +3455,8 @@ RED.nodes = (function() {
                             }
                         }
                     }
+
+
                     addNode(node);
                     RED.editor.validateNode(node);
                     node_map[n.id] = node;
@@ -16640,6 +16655,14 @@ RED.editor = (function() {
         if (input.attr('type') === "checkbox") {
             input.prop('checked',node[property]);
         }
+        if (input[0].nodeName === 'SELECT') {
+            input.empty();
+            var value = node[property];
+            var values = node._def.defaults[property].value;
+            (values || []).forEach(function(action) {
+                input.append('<option value="'+action+'"'+(value==action?" selected":"")+'>'+action+'</option>');
+            });
+        }
         else {
             var val = node[property];
             if (val == null) {
@@ -16750,6 +16773,7 @@ RED.editor = (function() {
      * @param prefix - the prefix to use in the input element ids (node-input|node-config-input)
      */
     function prepareEditDialog(node,definition,prefix,done) {
+        console.error('prepareEditDialog', node, definition)
         for (var d in definition.defaults) {
             if (definition.defaults.hasOwnProperty(d)) {
                 if (definition.defaults[d].type) {
@@ -17993,6 +18017,8 @@ RED.editor = (function() {
         RED.view.state(RED.state.EDITING);
         var subflowEditor;
 
+        console.error('showEditSubflowDialog', subflow  );
+
         var trayOptions = {
             title: getEditStackTitle(),
             buttons: [
@@ -18021,14 +18047,26 @@ RED.editor = (function() {
                             changed = true;
                         }
 
-                        var newNodeConfigId = $("#subflow-input-config").val();
+                        var newNodeConfigName = $("#subflow-input-config").val();
 
-                        if (newNodeConfigId != editing_node.configNodeId) {
-                            changes['configNodeId'] = editing_node.configNodeId;
-                            editing_node.configNodeId = newNodeConfigId;
-                            editing_node._def.defaults.configNodeId.type = newNodeConfigId;
+                        if (newNodeConfigName != editing_node.configNodeName) {
+                            changes['configNodeName'] = editing_node.configNodeName;
+                            editing_node.configNodeName = newNodeConfigName;
+                            editing_node._def.defaults.configNodeId = editing_node._def.defaults.configNodeName || {};
+                            editing_node._def.defaults.configNodeId.type = newNodeConfigName;
                             changed = true;
                         }
+
+                        var newActions = ($("#subflow-input-actions").val() || '').split(/,/ig);
+
+                        if (newActions != editing_node.actions) {
+                            changes['actions'] = editing_node.actions;
+                            editing_node.actions = newActions;
+                            editing_node._def.defaults.action = editing_node._def.defaults.action || {};
+                            editing_node._def.defaults.action.value = newActions;
+                            changed = true;
+                        }
+
 
                         var newNodeIsInject = $('#subflow-input-inject').prop("checked");
 
@@ -18036,51 +18074,13 @@ RED.editor = (function() {
                             changes['isInject'] = editing_node.isInject;
                             editing_node.isInject = newNodeIsInject;
                             editing_node._def.button = newNodeIsInject ? editing_node._def.button || {} : null;
+                            //editing_node._def.defaults.isInject.value = newNodeIsInject;
                             if (editing_node._def.button) {
                                 editing_node._def.button.enabled = true;
                                 editing_node._def.button.onclick =  function () {
-                                    debugger
+                                //    debugger
                                 };
-                                    /*
-                                    var label = this.name||"debug";
-                                    var node = this;
-                                    $.ajax({
-                                        url: "debug/"+this.id+"/"+(this.active?"enable":"disable"),
-                                        type: "POST",
-                                        success: function(resp, textStatus, xhr) {
-                                            var historyEvent = {
-                                                t:'edit',
-                                                node:node,
-                                                changes:{
-                                                    active: !node.active
-                                                },
-                                                dirty:node.dirty,
-                                                changed:node.changed
-                                            };
-                                            node.changed = true;
-                                            node.dirty = true;
-                                            RED.nodes.dirty(true);
-                                            RED.history.push(historyEvent);
-                                            RED.view.redraw();
-                                            if (xhr.status == 200) {
-                                                RED.notify(node._("debug.notification.activated",{label:label}),"success");
-                                            } else if (xhr.status == 201) {
-                                                RED.notify(node._("debug.notification.deactivated",{label:label}),"success");
-                                            }
-                                        },
-                                        error: function(jqXHR,textStatus,errorThrown) {
-                                            if (jqXHR.status == 404) {
-                                                RED.notify(node._("common.notification.error", {message: node._("common.notification.errors.not-deployed")}),"error");
-                                            } else if (jqXHR.status === 0) {
-                                                RED.notify(node._("common.notification.error", {message: node._("common.notification.errors.no-response")}),"error");
-                                            } else {
-                                                RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.unexpected",{status:err.status,message:err.response})}),"error");
-                                            }
-                                        }
-                                    });
-                                    */
                             }
-                            editing_node._def.defaults.isInject.value = newNodeIsInject;
                             changed = true;
                         }
 
@@ -18202,14 +18202,17 @@ RED.editor = (function() {
                 $("#subflow-input-name").val(subflow.name);
                 RED.text.bidi.prepareInput($("#subflow-input-name"));
 
+                $("#subflow-input-actions").val((subflow.actions || []).join(','));
+                RED.text.bidi.prepareInput($("#subflow-input-actions"));
+
                 $("#subflow-input-config").empty();
                 var configs = RED.nodes.getConfigNodes();
                 configs.forEach(function(config) {
                     $("#subflow-input-config").append($("<option></option>").val(config.type).text(config.type));
                 })
                 // TODO: co do cholery?
-                //$("#subflow-input-config").val(subflow.configNodeName);
-                $("#subflow-input-config").val(subflow.configNodeId);
+                $("#subflow-input-config").val(subflow.configNodeName);
+                //$("#subflow-input-config").val(subflow._def.defaults.configNodeName);//subflow.configNodeId);
 
                 $('#subflow-input-inject').prop("checked", subflow.isInject);
 
@@ -21201,6 +21204,8 @@ RED.subflow = (function() {
                 n.inputs = activeSubflow.in.length;
                 n.outputs = activeSubflow.out.length;
                 n.configNodeId = activeSubflow.configNodeId;
+                n.action = activeSubflow.action;
+                n.actions = activeSubflow.actions;
                 n.isInject = activeSubflow.isInject;
 
                 while (n.outputs < n.ports.length) {

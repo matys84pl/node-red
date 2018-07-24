@@ -123,14 +123,22 @@
 
 <!-- subflow instance -->
 <script type="text/x-red" data-template-name="subflow">
+    <!-- name -->
     <div class="form-row">
         <label for="node-input-name" data-i18n="[append]editor:common.label.name"><i class="fa fa-tag"></i> </label>
         <input type="text" id="node-input-name">
-        <!--<button id="copy-config-name-button">Copy name from config</button>-->
     </div>
+
+    <!-- configuration node -->
     <div class="form-row">
         <label for="node-input-configNodeId" data-i18n="[append]editor:common.label.configuration"><i class="fa fa-tag"></i> </label>
         <input type="text" id="node-input-configNodeId">
+    </div>
+
+    <!-- action node -->
+    <div class="form-row">
+        <label for="node-input-action"><i class="fa fa-tag"></i> Action</label>
+        <select style="width: 250px;" id="node-input-action"></select>
     </div>
 </script>
 
@@ -146,7 +154,12 @@
     </div>
     <div class="form-row">
         <i class="fa fa-tag"></i>
-        <label for="subflow-input-inject">Inject</label><input type="checkbox" style="width: auto;" id="subflow-input-inject"></input>
+        <label for="subflow-input-actions">Actions</label><input type="text" id="subflow-input-actions"></select>
+        <i style="padding-left: 114px;">* comma separated list</i>
+    </div>
+    <div class="form-row">
+        <i class="fa fa-tag"></i>
+        <label for="subflow-input-inject">Button?</label><input type="checkbox" style="width: auto;" id="subflow-input-inject"></input>
     </div>
     <div class="form-row">
         <i class="fa fa-folder-o"></i>

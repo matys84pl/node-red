@@ -5,16 +5,13 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/editor/js/nodes.js" beforeDir="false" afterPath="$PROJECT_DIR$/editor/js/nodes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/editor/js/ui/editor.js" beforeDir="false" afterPath="$PROJECT_DIR$/editor/js/ui/editor.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/editor/js/ui/view.js" beforeDir="false" afterPath="$PROJECT_DIR$/editor/js/ui/view.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/editor/js/ui/subflow.js" beforeDir="false" afterPath="$PROJECT_DIR$/editor/js/ui/subflow.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/editor/templates/index.mst" beforeDir="false" afterPath="$PROJECT_DIR$/editor/templates/index.mst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/nodes/core/core/80-function.js" beforeDir="false" afterPath="$PROJECT_DIR$/nodes/core/core/80-function.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/red/red.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/red/red.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/red/red.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/red/red.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/red/runtime/log.js" beforeDir="false" afterPath="$PROJECT_DIR$/red/runtime/log.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/red/runtime/nodes/Node.js" beforeDir="false" afterPath="$PROJECT_DIR$/red/runtime/nodes/Node.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/red/runtime/nodes/flows/Flow.js" beforeDir="false" afterPath="$PROJECT_DIR$/red/runtime/nodes/flows/Flow.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/red/runtime/nodes/flows/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/red/runtime/nodes/flows/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/settings.js" afterDir="false" />
     </list>
     <ignored path="node-red.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -37,8 +34,8 @@
       <file leaf-file-name="nodes.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/editor/js/nodes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="197">
-              <caret line="368" selection-start-line="368" selection-end-line="368" />
+            <state relative-caret-position="247">
+              <caret line="494" column="30" selection-start-line="494" selection-start-column="30" selection-end-line="494" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -46,17 +43,17 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/red/runtime/nodes/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
+            <state relative-caret-position="1241">
               <caret line="73" column="19" selection-start-line="73" selection-start-column="19" selection-end-line="73" selection-end-column="19" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="80-function.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="80-function.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nodes/core/core/80-function.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="80" column="37" lean-forward="true" selection-start-line="80" selection-start-column="37" selection-end-line="80" selection-end-column="37" />
+            <state relative-caret-position="146">
+              <caret line="60" column="27" selection-start-line="60" selection-start-column="27" selection-end-line="60" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -64,17 +61,17 @@
       <file leaf-file-name="Node.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/red/runtime/nodes/Node.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="87" column="51" selection-start-line="87" selection-start-column="51" selection-end-line="87" selection-end-column="51" />
+            <state relative-caret-position="238">
+              <caret line="85" column="51" selection-start-line="85" selection-start-column="39" selection-end-line="85" selection-end-column="51" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="editor.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="editor.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/editor/js/ui/editor.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="283">
-              <caret line="1887" column="16" selection-start-line="1887" selection-start-column="16" selection-end-line="1887" selection-end-column="16" />
+            <state relative-caret-position="129">
+              <caret line="310" column="34" selection-start-line="310" selection-start-column="13" selection-end-line="310" selection-end-column="34" />
               <folding>
                 <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
@@ -87,8 +84,8 @@
       <file leaf-file-name="Flow.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/red/runtime/nodes/flows/Flow.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="31" column="35" selection-start-line="31" selection-start-column="35" selection-end-line="31" selection-end-column="35" />
+            <state relative-caret-position="332">
+              <caret line="334" column="30" selection-start-line="334" selection-start-column="30" selection-end-line="334" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -96,8 +93,8 @@
       <file leaf-file-name="index.mst" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/editor/templates/index.mst">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="239">
-              <caret line="137" column="46" lean-forward="true" selection-start-line="137" selection-start-column="46" selection-end-line="137" selection-end-column="62" />
+            <state relative-caret-position="561">
+              <caret line="148" column="107" selection-start-line="148" selection-start-column="106" selection-end-line="148" selection-end-column="107" />
             </state>
           </provider>
         </entry>
@@ -105,7 +102,7 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/red/runtime/storage/localfilesystem/projects/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
+            <state relative-caret-position="799">
               <caret line="47" column="33" selection-start-line="47" selection-start-column="33" selection-end-line="47" selection-end-column="33" />
             </state>
           </provider>
@@ -114,7 +111,7 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/red/runtime/nodes/flows/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
+            <state relative-caret-position="4369">
               <caret line="257" column="4" selection-start-line="257" selection-start-column="4" selection-end-line="257" selection-end-column="4" />
             </state>
           </provider>
@@ -123,7 +120,7 @@
       <file leaf-file-name="28-tail.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nodes/core/storage/28-tail.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
+            <state relative-caret-position="374">
               <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
             </state>
           </provider>
@@ -133,36 +130,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>console.error(</find>
-      <find>util.</find>
-      <find>status.failed</find>
-      <find>__node</find>
-      <find>delegateSta</find>
-      <find>var Log = require(&quot;../../log&quot;);</find>
-      <find>Log.</find>
-      <find>delegateS</find>
-      <find>statusNodeMap</find>
-      <find>delegat</find>
-      <find>isButtonEnabled</find>
-      <find>status</find>
-      <find>status = functio</find>
-      <find>does it have onlickc?</find>
-      <find>parentSt</find>
-      <find>nodes</find>
-      <find>flows.</find>
-      <find>Input/</find>
-      <find>nodeInput</find>
-      <find>createNode(</find>
-      <find>yeah</find>
-      <find>getNode</find>
-      <find>Creating new flow</find>
-      <find>update</find>
-      <find>config</find>
-      <find>common.label.configuration</find>
+      <find>name =</find>
+      <find>importNode</find>
+      <find>node.actions = n.actions;</find>
+      <find>TODO: make this a part of the node definition</find>
+      <find>TODO: make this a part of the node</find>
+      <find>input[0].nodeName === 'SELECT'</find>
+      <find>_def =</find>
+      <find>subflow</find>
+      <find>open:</find>
+      <find>(&quot;#subflow-input-actions&quot;</find>
+      <find>_def.</find>
+      <find>_def.defa</find>
+      <find>_def.default.</find>
+      <find>_def.defaults</find>
+      <find>$(&quot;#subflow-input-actions&quot;).val((subflow._def.defaults.actions</find>
+      <find>var newNodeConfigId = $(&quot;#subflow-input-config&quot;).va</find>
+      <find>editing_node.newNodeConfigName</find>
+      <find>editing_node.actio</find>
+      <find>showEditSubflowDialog</find>
+      <find>actions[</find>
+      <find>.actions.value =</find>
+      <find>.actions =</find>
+      <find>=== 'select</find>
+      <find>=== 'SELECT</find>
+      <find>preparePropertyEditor</find>
+      <find>node-input-actions</find>
+      <find>node</find>
+      <find>configNodeId.type</find>
       <find>configNodeId</find>
-      <find>node-input-config</find>
-      <find>.inject</find>
-      <find>subflow-template</find>
+      <find>configNodeName</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -187,12 +184,12 @@
         <option value="$PROJECT_DIR$/nodes/core/io/10-mqtt.js" />
         <option value="$PROJECT_DIR$/red/runtime/nodes/index.js" />
         <option value="$PROJECT_DIR$/red/runtime/nodes/flows/index.js" />
-        <option value="$PROJECT_DIR$/editor/js/nodes.js" />
         <option value="$PROJECT_DIR$/red/runtime/nodes/flows/Flow.js" />
-        <option value="$PROJECT_DIR$/red/runtime/nodes/Node.js" />
-        <option value="$PROJECT_DIR$/nodes/core/core/80-function.js" />
-        <option value="$PROJECT_DIR$/editor/templates/index.mst" />
         <option value="$PROJECT_DIR$/editor/js/ui/editor.js" />
+        <option value="$PROJECT_DIR$/red/runtime/nodes/Node.js" />
+        <option value="$PROJECT_DIR$/editor/js/nodes.js" />
+        <option value="$PROJECT_DIR$/editor/templates/index.mst" />
+        <option value="$PROJECT_DIR$/nodes/core/core/80-function.js" />
       </list>
     </option>
   </component>
@@ -230,6 +227,24 @@
             <path>
               <item name="node-red" type="b2602c69:ProjectViewProjectNode" />
               <item name="node-red" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="node-red" type="b2602c69:ProjectViewProjectNode" />
+              <item name="node-red" type="462c0819:PsiDirectoryNode" />
+              <item name="nodes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="node-red" type="b2602c69:ProjectViewProjectNode" />
+              <item name="node-red" type="462c0819:PsiDirectoryNode" />
+              <item name="nodes" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="node-red" type="b2602c69:ProjectViewProjectNode" />
+              <item name="node-red" type="462c0819:PsiDirectoryNode" />
+              <item name="nodes" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="node-red" type="b2602c69:ProjectViewProjectNode" />
@@ -379,7 +394,9 @@
       <workItem from="1531466365609" duration="1429000" />
       <workItem from="1531470162775" duration="16512000" />
       <workItem from="1531508249150" duration="6725000" />
-      <workItem from="1531857652470" duration="11264000" />
+      <workItem from="1531857652470" duration="11417000" />
+      <workItem from="1532115805736" duration="5797000" />
+      <workItem from="1532463856192" duration="7243000" />
     </task>
     <task id="LOCAL-00001" summary="An attempt to sort out configNodeId vs configNodeName">
       <created>1531513693873</created>
@@ -392,37 +409,37 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36521000" />
+    <option name="totallyTimeSpent" value="49714000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1696" height="1026" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19240049" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19240049" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.50713503" />
-      <window_info anchor="bottom" id="Version Control" order="7" visible="true" weight="0.11036036" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="7" visible="true" weight="0.11036036" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.24588364" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4094402" />
       <window_info anchor="bottom" id="Salesforce" order="7" />
+      <window_info anchor="right" id="Designer" order="3" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Debug Logs" order="7" />
+      <window_info id="Palette&#9;" order="2" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" id="Designer" order="3" />
-      <window_info anchor="bottom" id="Execute Anonymous" order="7" />
+      <window_info anchor="bottom" id="Debug Logs" order="7" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
-      <window_info id="Palette&#9;" order="2" />
+      <window_info anchor="bottom" id="Execute Anonymous" order="7" />
+      <window_info anchor="bottom" id="Messages" order="7" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Messages" order="7" />
       <window_info anchor="right" id="Maven Projects" order="3" />
     </layout>
   </component>
@@ -594,9 +611,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="251">
           <caret line="305" column="26" selection-start-line="305" selection-start-column="21" selection-end-line="305" selection-end-column="26" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -604,11 +618,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="287">
           <caret line="232" column="28" selection-start-line="232" selection-start-column="28" selection-end-line="232" selection-end-column="28" />
-          <folding>
-            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -727,14 +736,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nodes/core/storage/28-tail.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
+        <state relative-caret-position="374">
           <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/red/runtime/storage/localfilesystem/projects/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
+        <state relative-caret-position="799">
           <caret line="47" column="33" selection-start-line="47" selection-start-column="33" selection-end-line="47" selection-end-column="33" />
         </state>
       </provider>
@@ -755,62 +764,62 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/red/runtime/nodes/flows/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
+        <state relative-caret-position="4369">
           <caret line="257" column="4" selection-start-line="257" selection-start-column="4" selection-end-line="257" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/red/runtime/nodes/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
+        <state relative-caret-position="1241">
           <caret line="73" column="19" selection-start-line="73" selection-start-column="19" selection-end-line="73" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editor/js/nodes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="368" selection-start-line="368" selection-end-line="368" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/red/runtime/nodes/flows/Flow.js">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="332">
+          <caret line="334" column="30" selection-start-line="334" selection-start-column="30" selection-end-line="334" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editor/js/nodes.js">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="247">
-          <caret line="31" column="35" selection-start-line="31" selection-start-column="35" selection-end-line="31" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/red/runtime/nodes/Node.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="87" column="51" selection-start-line="87" selection-start-column="51" selection-end-line="87" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nodes/core/core/80-function.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="80" column="37" lean-forward="true" selection-start-line="80" selection-start-column="37" selection-end-line="80" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/editor/templates/index.mst">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="137" column="46" lean-forward="true" selection-start-line="137" selection-start-column="46" selection-end-line="137" selection-end-column="62" />
+          <caret line="494" column="30" selection-start-line="494" selection-start-column="30" selection-end-line="494" selection-end-column="30" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/editor/js/ui/editor.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="1887" column="16" selection-start-line="1887" selection-start-column="16" selection-end-line="1887" selection-end-column="16" />
+        <state relative-caret-position="129">
+          <caret line="310" column="34" selection-start-line="310" selection-start-column="13" selection-end-line="310" selection-end-column="34" />
           <folding>
             <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#label#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editor/templates/index.mst">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="148" column="107" selection-start-line="148" selection-start-column="106" selection-end-line="148" selection-end-column="107" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/red/runtime/nodes/Node.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="85" column="51" selection-start-line="85" selection-start-column="39" selection-end-line="85" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nodes/core/core/80-function.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="146">
+          <caret line="60" column="27" selection-start-line="60" selection-start-column="27" selection-end-line="60" selection-end-column="27" />
         </state>
       </provider>
     </entry>

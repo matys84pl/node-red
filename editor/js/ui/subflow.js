@@ -199,6 +199,8 @@ RED.subflow = (function() {
                 n.inputs = activeSubflow.in.length;
                 n.outputs = activeSubflow.out.length;
                 n.configNodeId = activeSubflow.configNodeId;
+                n.action = activeSubflow.action;
+                n.actions = activeSubflow.actions;
                 n.isInject = activeSubflow.isInject;
 
                 while (n.outputs < n.ports.length) {

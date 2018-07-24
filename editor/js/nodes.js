@@ -369,9 +369,10 @@ RED.nodes = (function() {
 
         RED.nodes.registerType("subflow:"+sf.id, {
             defaults:{
-                name:{value: ''},
-                configNodeId:{type: sf.configNodeId},
-                isInject:{value: false}
+                name:{value: sf.name},
+                configNodeId:{type: sf.configNodeName},
+                isInject:{value: false},
+                actions:{value: sf.actions}
             },
             info: sf.info,
             icon: function() { return sf.icon||"subflow.png" },
@@ -491,6 +492,11 @@ RED.nodes = (function() {
         node.id = n.id;
         node.type = n.type;
         node.z = n.z;
+        node.action = n.action;
+        node.actions = n.actions;
+        node.isInject = n.isInject;
+        node.configNodeName = n.configNodeName;
+        node.configNodeId = n.configNodeId;
 
         if (node.type == "unknown") {
             for (var p in n._orig) {
@@ -565,8 +571,10 @@ RED.nodes = (function() {
         node.name = n.name;
         node.info = n.info;
         node.category = n.category;
+        node.configNodeName = n.configNodeName;
         node.configNodeId = n.configNodeId;
         node.isInject = n.isInject;
+        node.actions = n.actions;
         node.in = [];
         node.out = [];
 
@@ -848,6 +856,7 @@ RED.nodes = (function() {
         // Find all tabs and subflow templates
         for (i=0;i<newNodes.length;i++) {
             n = newNodes[i];
+            n = newNodes[i];
             // TODO: remove workspace in next release+1
             if (n.type === "workspace" || n.type === "tab") {
                 if (n.type === "workspace") {
@@ -1045,6 +1054,10 @@ RED.nodes = (function() {
                         node.name = n.name;
                         node.outputs = subflow.out.length;
                         node.inputs = subflow.in.length;
+                        node.actions = n.actions;
+                        node.isInject = n.isInject;
+                        node.configNodeName = n.configNodeName;
+                        node.configNodeId = n.configNodeId;
                     } else {
                         if (!node._def) {
                             if (node.x && node.y) {
@@ -1122,6 +1135,8 @@ RED.nodes = (function() {
                             }
                         }
                     }
+
+
                     addNode(node);
                     RED.editor.validateNode(node);
                     node_map[n.id] = node;
