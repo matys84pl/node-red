@@ -2692,7 +2692,7 @@ RED.nodes = (function() {
                 name:{value: sf.name},
                 configNodeId:{type: sf.configNodeName},
                 isInject:{value: false},
-                actions:{value: sf.actions}
+                action:{value: sf.action}
             },
             info: sf.info,
             icon: function() { return sf.icon||"subflow.png" },
@@ -2813,7 +2813,6 @@ RED.nodes = (function() {
         node.type = n.type;
         node.z = n.z;
         node.action = n.action;
-        node.actions = n.actions;
         node.isInject = n.isInject;
         node.configNodeName = n.configNodeName;
         node.configNodeId = n.configNodeId;
@@ -2894,7 +2893,7 @@ RED.nodes = (function() {
         node.configNodeName = n.configNodeName;
         node.configNodeId = n.configNodeId;
         node.isInject = n.isInject;
-        node.actions = n.actions;
+        node.action = n.action;
         node.in = [];
         node.out = [];
 
@@ -3374,7 +3373,7 @@ RED.nodes = (function() {
                         node.name = n.name;
                         node.outputs = subflow.out.length;
                         node.inputs = subflow.in.length;
-                        node.actions = n.actions;
+                        node.action = n.action;
                         node.isInject = n.isInject;
                         node.configNodeName = n.configNodeName;
                         node.configNodeId = n.configNodeId;
@@ -16648,6 +16647,7 @@ RED.editor = (function() {
      * @param definition - the definition of the field
      */
     function preparePropertyEditor(node,property,prefix,definition) {
+        console.error('preparePropertyEditor', node, property, definition)
         var input = $("#"+prefix+"-"+property);
         if (input.length === 0) {
             return;
@@ -17480,6 +17480,11 @@ RED.editor = (function() {
                             editing_node.changed = true;
                             RED.nodes.dirty(true);
 
+                            if (editing_node.action && editing_node.configNodeId) {
+                                var configNode = RED.nodes.getNode(editing_node.configNodeId);
+                                editing_node.name = '[' + editing_node.action.toUpperCase() + '] ' + configNode.name;
+                            }
+
                             var activeSubflow = RED.nodes.subflow(RED.workspaces.active());
                             var subflowInstances = null;
                             if (activeSubflow) {
@@ -18057,13 +18062,13 @@ RED.editor = (function() {
                             changed = true;
                         }
 
-                        var newActions = ($("#subflow-input-actions").val() || '').split(/,/ig);
+                        var newAction = ($("#subflow-input-action").val() || '').split(/,/ig);
 
-                        if (newActions != editing_node.actions) {
-                            changes['actions'] = editing_node.actions;
-                            editing_node.actions = newActions;
+                        if (newAction != editing_node.action) {
+                            changes['action'] = editing_node.action;
+                            editing_node.action = newAction.map(function (action) { return action.trim()});
                             editing_node._def.defaults.action = editing_node._def.defaults.action || {};
-                            editing_node._def.defaults.action.value = newActions;
+                            editing_node._def.defaults.action.value = newAction;
                             changed = true;
                         }
 
@@ -18202,18 +18207,15 @@ RED.editor = (function() {
                 $("#subflow-input-name").val(subflow.name);
                 RED.text.bidi.prepareInput($("#subflow-input-name"));
 
-                $("#subflow-input-actions").val((subflow.actions || []).join(','));
-                RED.text.bidi.prepareInput($("#subflow-input-actions"));
+                $("#subflow-input-action").val(subflow.action);
+                RED.text.bidi.prepareInput($("#subflow-input-action"));
 
                 $("#subflow-input-config").empty();
                 var configs = RED.nodes.getConfigNodes();
                 configs.forEach(function(config) {
                     $("#subflow-input-config").append($("<option></option>").val(config.type).text(config.type));
                 })
-                // TODO: co do cholery?
                 $("#subflow-input-config").val(subflow.configNodeName);
-                //$("#subflow-input-config").val(subflow._def.defaults.configNodeName);//subflow.configNodeId);
-
                 $('#subflow-input-inject').prop("checked", subflow.isInject);
 
 

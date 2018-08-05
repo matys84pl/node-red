@@ -33,7 +33,6 @@ function Node(n, runtime) {
     this.configNodeName = n.configNodeName; // name of the configuration node
     this.configNodeId = n.configNodeId; // id of the configuration node
     this.isInject = n.isInject; // whether the node has a button in the admin
-    this.actions = n.actions; // actions associated with this node
     this.action = n.action; // action associated with this node
     this._closeCallbacks = [];
     this._alias = n._alias;
@@ -42,7 +41,7 @@ function Node(n, runtime) {
         id: this.id,
         type: this.type,
         isInject: this.isInject,
-        actions: this.actions,
+        action: this.action,
     });
 
     if (runtime) {
@@ -280,11 +279,14 @@ function log_helper(self, level, msg) {
     if (self.configNodeId) {
         o.configNodeId = self.configNodeId;
     }
+    if (self.configNodeName) {
+        o.configNodeName = self.configNodeName;
+    }
+    if (self.action) {
+        o.action = self.action;
+    }
     if (self.isInject) {
         o.isInject = self.isInject;
-    }
-    if (self.actions) {
-        o.actions = self.actions;
     }
     Log.log(o);
 }

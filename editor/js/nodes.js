@@ -372,7 +372,7 @@ RED.nodes = (function() {
                 name:{value: sf.name},
                 configNodeId:{type: sf.configNodeName},
                 isInject:{value: false},
-                actions:{value: sf.actions}
+                action:{value: sf.action}
             },
             info: sf.info,
             icon: function() { return sf.icon||"subflow.png" },
@@ -493,7 +493,6 @@ RED.nodes = (function() {
         node.type = n.type;
         node.z = n.z;
         node.action = n.action;
-        node.actions = n.actions;
         node.isInject = n.isInject;
         node.configNodeName = n.configNodeName;
         node.configNodeId = n.configNodeId;
@@ -574,7 +573,7 @@ RED.nodes = (function() {
         node.configNodeName = n.configNodeName;
         node.configNodeId = n.configNodeId;
         node.isInject = n.isInject;
-        node.actions = n.actions;
+        node.action = n.action;
         node.in = [];
         node.out = [];
 
@@ -1054,7 +1053,7 @@ RED.nodes = (function() {
                         node.name = n.name;
                         node.outputs = subflow.out.length;
                         node.inputs = subflow.in.length;
-                        node.actions = n.actions;
+                        node.action = n.action;
                         node.isInject = n.isInject;
                         node.configNodeName = n.configNodeName;
                         node.configNodeId = n.configNodeId;

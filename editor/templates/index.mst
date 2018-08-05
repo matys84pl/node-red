@@ -154,7 +154,7 @@
     </div>
     <div class="form-row">
         <i class="fa fa-tag"></i>
-        <label for="subflow-input-actions">Actions</label><input type="text" id="subflow-input-actions"></select>
+        <label for="subflow-input-action">Actions</label><input type="text" id="subflow-input-action"></select>
         <i style="padding-left: 114px;">* comma separated list</i>
     </div>
     <div class="form-row">
