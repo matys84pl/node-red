@@ -21,6 +21,7 @@ const redUtil = require("../util");
 const Log = require("../log");
 const context = require("./context");
 const flows = require("./flows");
+const RED = require("../../red.js");
 
 let nodesCount = 0;
 
@@ -29,29 +30,43 @@ function Node(n, runtime) {
     this.type = n.type; // function, debug, custom type
     this.name = n.name; // node's name
     this.parentId = this.z = n.z; // ibm, wtf is z?
-    this.runtime = runtime; // hack: runtime to handle post requests
     this.configNodeName = n.configNodeName; // name of the configuration node
     this.configNodeId = n.configNodeId; // id of the configuration node
     this.isInject = n.isInject; // whether the node has a button in the admin
     this.action = n.action; // action associated with this node
+    if (runtime) {
+        this._auth = runtime.adminApi.auth;
+        this._adminApp = runtime.adminApi.adminApp;
+    }
     this._closeCallbacks = [];
     this._alias = n._alias;
+    this.myId = nodesCount;
 
-    Log.debug(`Creating new node [${nodesCount++}]`, {
-        id: this.id,
-        type: this.type,
-        isInject: this.isInject,
-        action: this.action,
-    });
+    if (this.type.split(':')[0] === 'subflow') {
+        if (n.action && n.action.constructor === Array) {
+            Log.error('actions is a constructor')
+            //throw new Error('WTF?')
+        }
+        Log.debug(`Creating new node subflow [${nodesCount}]`, {
+            id: this.id,
+            myId: this.myId,
+            type: this.type,
+            hasRuntime: Boolean(this._adminApp)
+        });
+        nodesCount++;
+    } else {
+    }
 
-    if (runtime) {
-        const {
-            auth,
-            adminApp,
-        } = runtime.adminApi;
+    if (this._auth && this._adminApp && this.type.split(':')[0] === 'subflow') {
+        this._adminApp.post(`/nodeInput/${this.id}`, this.handleInputRequest.bind(this));
+        this._adminApp.post(`/nodeStatus/${this.id}`, this.handleStatusRequest.bind(this));
 
-        adminApp.post(`/nodeInput/${this.id}`, auth.needsPermission("inject.write"), this.handleInputRequest.bind(this));
-        adminApp.post(`/nodeStatus/${this.id}`, auth.needsPermission("inject.write"), this.handleStatusRequest.bind(this));
+        Log.debug('Add handlers', {
+            path: `/nodeInput/${this.id}`,
+            myId: this.myId,
+        });
+    } else if (this.type.split(':')[0] === 'subflow') {
+        Log.error('HANDLERS NOT ADDED')
     }
 
     this.updateWires(n.wires);
@@ -59,7 +74,12 @@ function Node(n, runtime) {
 
 Node.prototype.handleInputRequest = function (req, res) {
     try {
-        Log.debug('Node received input REST request');
+        Log.debug('Node received input REST request', {
+            id: this.id,
+            myId: this.myId,
+            type: this.type,
+            action: this.action,
+        });
         this.receive({ payload: Math.random() * 10 });
         res.sendStatus(200);
     } catch (err) {
@@ -82,7 +102,6 @@ Node.prototype.handleStatusRequest = function (req, res) {
 util.inherits(Node, EventEmitter);
 
 Node.prototype.updateWires = function (wires) {
-    console.log("UPDATE",this.id, this.configNodeId);
     this.wires = wires || [];
     delete this._wire;
 
@@ -124,6 +143,40 @@ Node.prototype.on = function (event, callback) {
 };
 
 Node.prototype.close = function (removed) {
+    if (this.type.split(':')[0] === 'subflow') {
+        Log.debug('Removing node', {
+            id: this.id,
+            type: this.type,
+            removed: Boolean(removed), hasRuntime: Boolean(this._adminApp)
+        });
+        if (this._adminApp) {
+            var node = this;
+            node._adminApp._router.stack = node._adminApp._router.stack.filter(function (route) {
+                Log.debug('Path', route.route ? route.route.path : '');
+                const isInput = route.route && route.route.path === `/nodeInput/${node.id}`;
+                const isStatus = route.route && route.route.path === `/nodeStatus/${node.id}`;
+                Log.debug(' -->', {isInput: isInput, isStatus: isStatus});
+                if (isInput || isStatus) {
+                    Log.debug(' --> removed index', route.route.path);
+                    return false;
+                }
+                return true;
+            })
+            //node._adminApp._router.stack.forEach(function (route, i, routes) {
+
+                /*
+                /*if (isInput || isStatus) {
+                    Log.debug('Removed handlers', {
+                        route: route,
+                        path: route.route.path,
+                        myId: this.myId,
+                        i: i,
+                    });
+                    routes.splice(i,1);
+                }*/
+            //});
+        }
+    }
     //console.log(this.type,this.id,removed);
     var promises = [];
     var node = this;
@@ -254,6 +307,12 @@ Node.prototype.receive = function (msg) {
     }
     this.metric("receive", msg);
     try {
+        /*Log.debug('Node receive message', {
+            id: this.id,
+            myId: this.myId,
+            type: this.type,
+            msg: msg,
+        })*/
         this.emit("input", msg);
     } catch (err) {
         this.error(err, msg);

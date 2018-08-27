@@ -1765,7 +1765,6 @@ RED.view = (function() {
     }
 
     function nodeButtonClicked(d) {
-        console.error('node button clicked', d);
         if (!activeSubflow) {
             if (d._def.button.toggle) {
                 d[d._def.button.toggle] = !d[d._def.button.toggle];

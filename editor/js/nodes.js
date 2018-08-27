@@ -577,6 +577,8 @@ RED.nodes = (function() {
         node.in = [];
         node.out = [];
 
+        console.error('convert subflow', n)
+
         n.in.forEach(function(p) {
             var nIn = {x:p.x,y:p.y,wires:[]};
             var wires = links.filter(function(d) { return d.source === p });
@@ -1057,6 +1059,7 @@ RED.nodes = (function() {
                         node.isInject = n.isInject;
                         node.configNodeName = n.configNodeName;
                         node.configNodeId = n.configNodeId;
+                        console.error('assigned action', n.action)
                     } else {
                         if (!node._def) {
                             if (node.x && node.y) {

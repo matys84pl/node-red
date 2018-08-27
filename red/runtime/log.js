@@ -78,7 +78,7 @@ var consoleLogger = function (msg) {
             util.log("[" + levelNames[msg.level] + "] " + (msg.type ? "[" + msg.type + ":" + (msg.name || msg.id) + "] " : "") + msg.msg.stack);
         } else {
             var message = msg.msg;
-            var data = JSON.stringify(msg.data);
+            var data = JSON.stringify(msg.data, null, 2);
             if (typeof message === 'object' && message !== null && message.toString() === '[object Object]' && message.message) {
                 message = message.message;
             }

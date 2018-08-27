@@ -2897,6 +2897,8 @@ RED.nodes = (function() {
         node.in = [];
         node.out = [];
 
+        console.error('convert subflow', n)
+
         n.in.forEach(function(p) {
             var nIn = {x:p.x,y:p.y,wires:[]};
             var wires = links.filter(function(d) { return d.source === p });
@@ -3377,6 +3379,7 @@ RED.nodes = (function() {
                         node.isInject = n.isInject;
                         node.configNodeName = n.configNodeName;
                         node.configNodeId = n.configNodeId;
+                        console.error('assigned action', n.action)
                     } else {
                         if (!node._def) {
                             if (node.x && node.y) {
@@ -12605,7 +12608,6 @@ RED.view = (function() {
     }
 
     function nodeButtonClicked(d) {
-        console.error('node button clicked', d);
         if (!activeSubflow) {
             if (d._def.button.toggle) {
                 d[d._def.button.toggle] = !d[d._def.button.toggle];
@@ -16655,7 +16657,7 @@ RED.editor = (function() {
         if (input.attr('type') === "checkbox") {
             input.prop('checked',node[property]);
         }
-        if (input[0].nodeName === 'SELECT') {
+        if (node.type.split(':')[0] === 'subflow' && input[0].nodeName === 'SELECT') {
             input.empty();
             var value = node[property];
             var values = node._def.defaults[property].value;
@@ -18056,7 +18058,7 @@ RED.editor = (function() {
 
                         if (newNodeConfigName != editing_node.configNodeName) {
                             changes['configNodeName'] = editing_node.configNodeName;
-                            editing_node.configNodeName = newNodeConfigName;
+                            editing_node._def.configNodeName = newNodeConfigName;
                             editing_node._def.defaults.configNodeId = editing_node._def.defaults.configNodeName || {};
                             editing_node._def.defaults.configNodeId.type = newNodeConfigName;
                             changed = true;
@@ -18066,9 +18068,10 @@ RED.editor = (function() {
 
                         if (newAction != editing_node.action) {
                             changes['action'] = editing_node.action;
-                            editing_node.action = newAction.map(function (action) { return action.trim()});
-                            editing_node._def.defaults.action = editing_node._def.defaults.action || {};
-                            editing_node._def.defaults.action.value = newAction;
+                            //editing_node._def.action = newAction.map(function (action) { return action.trim()});
+                            editing_node._def.actionValues = newAction.map(function (action) { return action.trim()});
+                            /*editing_node._def.defaults.action = editing_node._def.defaults.action || {};
+                            editing_node._def.defaults.action.value = newAction;*/
                             changed = true;
                         }
 
@@ -18078,6 +18081,7 @@ RED.editor = (function() {
                         if (newNodeIsInject != editing_node.isInject) {
                             changes['isInject'] = editing_node.isInject;
                             editing_node.isInject = newNodeIsInject;
+                            editing_node._def.isInject = newNodeIsInject;
                             editing_node._def.button = newNodeIsInject ? editing_node._def.button || {} : null;
                             //editing_node._def.defaults.isInject.value = newNodeIsInject;
                             if (editing_node._def.button) {

@@ -45,6 +45,7 @@ module.exports = function(RED) {
         };
 
         this.on("input",function(msg) {
+            node.log('WTF?')
             if (this.complete === "true") {
                 // debug complete msg object
                 if (this.console === "true") {
@@ -102,6 +103,7 @@ module.exports = function(RED) {
     });
 
     function sendDebug(msg) {
+        console.error('sendDebug', msg)
         // don't put blank errors in sidebar (but do add to logs)
         //if ((msg.msg === "") && (msg.hasOwnProperty("level")) && (msg.level === 20)) { return; }
         if (msg.msg instanceof Error) {

@@ -14,6 +14,7 @@
  * limitations under the License.
  **/
 
+var _ = require("lodash");
 var when = require("when");
 var clone = require("clone");
 var typeRegistry = require("../registry");
@@ -63,6 +64,9 @@ function Flow(global, flow, runtime) {
                     }
                 }
                 if (readyToCreate) {
+                    if (node.type.split(':')[0] === 'subflow') {
+                        Log.debug('Flow: create new subflow node', { type: node.type, node: node });
+                    }
                     newNode = createNode(node.type, node);
                     if (newNode) {
                         activeNodes[id] = newNode;
@@ -320,13 +324,19 @@ function createNode(type, config, runtime) {
 }
 
 function createSubflow(sf, sfn, subflows, globalSubflows, activeNodes, runtime) {
-    console.error('create subflow')
     var nodes = [];
     var node_map = {};
     var newNodes = [];
     var node;
     var wires;
     var i, j, k;
+
+    Log.debug('Creating subflow', {
+        action: sfn.action,
+        actions: sfn.actions,
+        configNodeName: sfn.configNodeName,
+        configNodeId: sfn.configNodeId,
+    });
 
     var createNodeInSubflow = function (def) {
         node = clone(def);
@@ -341,12 +351,7 @@ function createSubflow(sf, sfn, subflows, globalSubflows, activeNodes, runtime) 
         node.actions = sfn.actions;
         newNodes.push(node);
 
-        Log.debug('Creating node in subflow', {
-            id: node.id,
-            type: def.type,
-            configNodeId: node.configNodeId,
-            configNodeName: node.configNodeName,
-        })
+        Log.debug('Creating node in subflow', node.id)
     }
 
     // Clone all of the subflow node definitions and give them new IDs
@@ -398,9 +403,9 @@ function createSubflow(sf, sfn, subflows, globalSubflows, activeNodes, runtime) 
         type: sfn.type,
         z: sfn.z,
         name: sfn.name,
-        configNodeId: sf.configNodeId,
-        isInject: sf.isInject,
-        actions: sf.actions,
+        configNodeId: sfn.configNodeId,
+        isInject: sfn.isInject,
+        action: _.head(_.flatten([sfn.action])), // take first as default
         wires: []
     }
     if (sf.in) {
@@ -413,7 +418,7 @@ function createSubflow(sf, sfn, subflows, globalSubflows, activeNodes, runtime) 
     }
     var subflowNode = new Node(subflowInstance, runtime);
 
-    Log.debug('Creating subflow', subflowInstance);
+    Log.debug('Subflow created', subflowInstance);
 
 
     subflowNode.on("input", function (msg) {
