@@ -198,10 +198,12 @@ RED.subflow = (function() {
                 }
                 n.inputs = activeSubflow.in.length;
                 n.outputs = activeSubflow.out.length;
-                n.configNodeId = activeSubflow.configNodeId;
-                n.action = activeSubflow.action;
-                n.actions = activeSubflow.actions;
                 n.isInject = activeSubflow.isInject;
+                // active subflow is a definition not instance
+                // eventually we can check her whether existing action
+                // or configNodeId is valid based on the new subflow definition
+                /*n.configNodeId = activeSubflow.configNodeId;
+                n.action = activeSubflow.action;*/
 
                 while (n.outputs < n.ports.length) {
                     n.ports.pop();

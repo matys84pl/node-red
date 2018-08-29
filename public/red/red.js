@@ -2703,7 +2703,6 @@ RED.nodes = (function() {
             button: sf.isInject ? {
                 enabled: sf.isInject,
                 onclick: function () {
-                    console.error('click!!!')
                     $.ajax({
                         url: "nodeInput/"+this.id,
                         type:"POST",
@@ -2807,15 +2806,23 @@ RED.nodes = (function() {
         if (n.type === 'tab') {
             return convertWorkspace(n);
         }
+        console.error('convertNode', n)
         exportCreds = exportCreds || false;
         var node = {};
         node.id = n.id;
         node.type = n.type;
         node.z = n.z;
-        node.action = n.action;
-        node.isInject = n.isInject;
-        node.configNodeName = n.configNodeName;
-        node.configNodeId = n.configNodeId;
+
+        /*if (node.type.split(':')[0] === 'subflow') {
+            node.isInject = n.isInject;
+            //node.configNodeName = n.configNodeName;
+            if (n.action && n.action.constructor !== Array) {
+                node.action = n.action;
+            }
+            if (n.configNodeId) {
+                node.configNodeId = n.configNodeId;
+            }
+        }*/
 
         if (node.type == "unknown") {
             for (var p in n._orig) {
@@ -2891,7 +2898,7 @@ RED.nodes = (function() {
         node.info = n.info;
         node.category = n.category;
         node.configNodeName = n.configNodeName;
-        node.configNodeId = n.configNodeId;
+        //node.configNodeId = n.configNodeId;
         node.isInject = n.isInject;
         node.action = n.action;
         node.in = [];
@@ -3377,8 +3384,9 @@ RED.nodes = (function() {
                         node.inputs = subflow.in.length;
                         node.action = n.action;
                         node.isInject = n.isInject;
-                        node.configNodeName = n.configNodeName;
                         node.configNodeId = n.configNodeId;
+                        /*node.configNodeName = n.configNodeName;
+                        node.configNodeId = n.configNodeId;*/
                         console.error('assigned action', n.action)
                     } else {
                         if (!node._def) {
@@ -21209,10 +21217,12 @@ RED.subflow = (function() {
                 }
                 n.inputs = activeSubflow.in.length;
                 n.outputs = activeSubflow.out.length;
-                n.configNodeId = activeSubflow.configNodeId;
-                n.action = activeSubflow.action;
-                n.actions = activeSubflow.actions;
                 n.isInject = activeSubflow.isInject;
+                // active subflow is a definition not instance
+                // eventually we can check her whether existing action
+                // or configNodeId is valid based on the new subflow definition
+                /*n.configNodeId = activeSubflow.configNodeId;
+                n.action = activeSubflow.action;*/
 
                 while (n.outputs < n.ports.length) {
                     n.ports.pop();

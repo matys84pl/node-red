@@ -348,6 +348,7 @@ function createSubflow(sf, sfn, subflows, globalSubflows, activeNodes, runtime) 
         node.configNodeName = sfn.configNodeName;
         node.configNodeId = sfn.configNodeId;
         node.action = sfn.action;
+        debugger
         node.actions = sfn.actions;
         newNodes.push(node);
 
