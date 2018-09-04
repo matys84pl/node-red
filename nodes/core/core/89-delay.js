@@ -81,6 +81,7 @@ module.exports = function(RED) {
         var node = this;
 
         var clearDelayList = function() {
+            console.error('[delay] ' + node.name + '--> clear delay list ')
             for (var i=0; i<node.idList.length; i++ ) {
                 clearTimeout(node.idList[i]);
             }
@@ -90,16 +91,26 @@ module.exports = function(RED) {
 
         if (node.pauseType === "delay") {
             node.on("input", function(msg) {
-                var id = setTimeout(function() {
-                    node.idList.splice(node.idList.indexOf(id),1);
-                    if (node.idList.length === 0) { node.status({}); }
-                    node.send(msg);
-                }, node.timeout);
-                node.idList.push(id);
-                if ((node.timeout > 1000) && (node.idList.length !== 0)) {
-                    node.status({fill:"blue",shape:"dot",text:" "});
+                console.error('[delay] ' + node.name + ' delay', node.timeout);
+                if (msg.reset) {
+                    console.error('[delay] ' + node.name + '--> has reset');
+                    clearDelayList();
+                } else {
+                    console.error('[delay] ' + node.name + '--> set timeout');
+                    var id = setTimeout(function() {
+                        console.error('[delay] ' + node.name + '--> timeout executed: ');// + JSON.stringify(msg, null, 2));
+                        node.idList.splice(node.idList.indexOf(id),1);
+                        /*if (node.idList.length === 0) {
+                            node.status({});
+                        } else {*/
+                            node.send(msg);
+                        //}
+                    }, node.timeout);
+                    node.idList.push(id);
+                    if ((node.timeout > 1000) && (node.idList.length !== 0)) {
+                        node.status({fill:"blue",shape:"dot",text:" "});
+                    }
                 }
-                if (msg.hasOwnProperty("reset")) { clearDelayList(); }
             });
             node.on("close", function() { clearDelayList(); });
         }
@@ -110,16 +121,28 @@ module.exports = function(RED) {
                     delayvar = parseFloat(msg.delay);
                 }
                 if (delayvar < 0) { delayvar = 0; }
-                var id = setTimeout(function() {
-                    node.idList.splice(node.idList.indexOf(id),1);
-                    if (node.idList.length === 0) { node.status({}); }
-                    node.send(msg);
-                }, delayvar);
-                node.idList.push(id);
-                if ((delayvar >= 0) && (node.idList.length !== 0)) {
-                    node.status({fill:"blue",shape:"dot",text:delayvar/1000+"s"});
+
+                console.error('[delay] ' + node.name + ' variable delay', delayvar);
+
+                if (msg.reset) {
+                    console.error('[delay] ' + node.name + '--> has reset');
+                    clearDelayList();
+                } else {
+                    console.error('[delay] ' + node.name + '--> set timeout');
+                    var id = setTimeout(function() {
+                        console.error('[delay] ' + node.name + '--> timeout executed: ');// + JSON.stringify(msg, null, 2));
+                        node.idList.splice(node.idList.indexOf(id),1);
+                        /*if (node.idList.length === 0) {
+                            node.status({});*/
+                        //} else {
+                            node.send(msg);
+                        //}
+                    }, delayvar);
+                    node.idList.push(id);
+                    if ((delayvar >= 0) && (node.idList.length !== 0)) {
+                        node.status({fill:"blue",shape:"dot",text:delayvar/1000+"s"});
+                    }
                 }
-                if (msg.hasOwnProperty("reset")) { clearDelayList(); }
             });
             node.on("close", function() { clearDelayList(); });
         }
@@ -172,7 +195,7 @@ module.exports = function(RED) {
                         node.send(msg);
                     }
                 }
-                if (msg.hasOwnProperty("reset")) {
+                if (msg.reset) {
                     clearInterval(node.intervalID);
                     node.intervalID = -1;
                     node.buffer = [];
@@ -212,7 +235,7 @@ module.exports = function(RED) {
                 }
                 if (!hit) { node.buffer.push(msg); } // if not add to end of queue
                 node.status({text:node.buffer.length});
-                if (msg.hasOwnProperty("reset")) {
+                if (msg.reset) {
                     node.buffer = [];
                     node.status({text:"reset"});
                 }
@@ -225,17 +248,20 @@ module.exports = function(RED) {
         }
         else if (node.pauseType === "random") {
             node.on("input", function(msg) {
-                var wait = node.randomFirst + (node.diff * Math.random());
-                var id = setTimeout(function() {
-                    node.idList.splice(node.idList.indexOf(id),1);
-                    node.send(msg);
-                    node.status({});
-                }, wait);
-                node.idList.push(id);
-                if ((node.timeout >= 1000) && (node.idList.length !== 0)) {
-                    node.status({fill:"blue",shape:"dot",text:parseInt(wait/10)/100+"s"});
+                if (msg.reset) {
+                    clearDelayList();
+                } else {
+                    var wait = node.randomFirst + (node.diff * Math.random());
+                    var id = setTimeout(function() {
+                        node.idList.splice(node.idList.indexOf(id),1);
+                        node.send(msg);
+                        node.status({});
+                    }, wait);
+                    node.idList.push(id);
+                    if ((node.timeout >= 1000) && (node.idList.length !== 0)) {
+                        node.status({fill:"blue",shape:"dot",text:parseInt(wait/10)/100+"s"});
+                    }
                 }
-                if (msg.hasOwnProperty("reset")) { clearDelayList(); }
             });
             node.on("close", function() { clearDelayList(); });
         }

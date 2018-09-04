@@ -232,6 +232,7 @@ module.exports = function(RED) {
             });
             this.on("input", function(msg) {
                 try {
+                    console.error('[function] ' + n.name);
                     var start = process.hrtime();
                     context.msg = msg;
                     this.script.runInContext(context);
