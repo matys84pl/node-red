@@ -15,6 +15,7 @@
  **/
 
 var express = require("express");
+var bodyParser = require("body-parser");
 
 var nodes = require("./nodes");
 var flows = require("./flows");
@@ -32,6 +33,8 @@ module.exports = {
         var needsPermission = auth.needsPermission;
 
         var adminApp = express();
+
+        adminApp.use(bodyParser.json())
 
         // Flows
         adminApp.get("/flows",needsPermission("flows.read"),flows.get,apiUtil.errorHandler);

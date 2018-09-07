@@ -382,9 +382,11 @@ RED.nodes = (function() {
             color: "#da9",
             button: sf.isInject ? {
                 enabled: sf.isInject,
-                onclick: function () {
+                onmousedown: function () {
                     $.ajax({
-                        url: "nodeInput/"+this.id,
+                        contentType: "application/json; charset=utf-8",
+                        dataType   : "json",
+                        url: "nodeInput/"+this.id+"?state=1",
                         type:"POST",
                         success: function(resp) {
                             //RED.notify(node._("inject.success",{label:label}),"success");
@@ -400,6 +402,16 @@ RED.nodes = (function() {
                                 RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.unexpected",{status:jqXHR.status,message:textStatus})}),"error");
                             }*/
                         }
+                    });
+                },
+                onmouseup: function () {
+                    $.ajax({
+                        contentType: "application/json; charset=utf-8",
+                        dataType   : "json",
+                        url: "nodeInput/"+this.id+"?state=0",
+                        type: "POST",
+                        success: function(resp) {},
+                        error: function(jqXHR,textStatus,errorThrown) {}
                     });
                 }
             } : undefined,

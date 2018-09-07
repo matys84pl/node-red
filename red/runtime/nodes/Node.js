@@ -79,8 +79,9 @@ Node.prototype.handleInputRequest = function (req, res) {
             myId: this.myId,
             type: this.type,
             action: this.action,
+            query: req.query,
         });
-        this.receive({ payload: Math.random() * 10 });
+        this.receive({ payload: +req.query.state });
         res.sendStatus(200);
     } catch (err) {
         res.sendStatus(500);

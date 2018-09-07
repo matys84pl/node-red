@@ -2702,9 +2702,11 @@ RED.nodes = (function() {
             color: "#da9",
             button: sf.isInject ? {
                 enabled: sf.isInject,
-                onclick: function () {
+                onmousedown: function () {
                     $.ajax({
-                        url: "nodeInput/"+this.id,
+                        contentType: "application/json; charset=utf-8",
+                        dataType   : "json",
+                        url: "nodeInput/"+this.id+"?state=1",
                         type:"POST",
                         success: function(resp) {
                             //RED.notify(node._("inject.success",{label:label}),"success");
@@ -2720,6 +2722,16 @@ RED.nodes = (function() {
                                 RED.notify(node._("common.notification.error",{message:node._("common.notification.errors.unexpected",{status:jqXHR.status,message:textStatus})}),"error");
                             }*/
                         }
+                    });
+                },
+                onmouseup: function () {
+                    $.ajax({
+                        contentType: "application/json; charset=utf-8",
+                        dataType   : "json",
+                        url: "nodeInput/"+this.id+"?state=0",
+                        type: "POST",
+                        success: function(resp) {},
+                        error: function(jqXHR,textStatus,errorThrown) {}
                     });
                 }
             } : undefined,
@@ -12615,6 +12627,50 @@ RED.view = (function() {
         return buttonEnabled;
     }
 
+    function nodeButtonMouseDown(d) {
+        if (!activeSubflow) {
+            if (d._def.button.toggle) {
+                d[d._def.button.toggle] = !d[d._def.button.toggle];
+                d.dirty = true;
+            }
+            if (d._def.button.onmousedown) {
+                try {
+                    d._def.button.onmousedown.call(d);
+                } catch(err) {
+                    console.log("Definition error: "+d.type+".onmousedown",err);
+                }
+            }
+            if (d.dirty) {
+                redraw();
+            }
+        } else {
+            RED.notify(RED._("notification.warning", {message:RED._("notification.warnings.nodeActionDisabled")}),"warning");
+        }
+        d3.event.preventDefault();
+    }
+
+    function nodeButtonMouseUp(d) {
+        if (!activeSubflow) {
+            if (d._def.button.toggle) {
+                d[d._def.button.toggle] = !d[d._def.button.toggle];
+                d.dirty = true;
+            }
+            if (d._def.button.onmouseup) {
+                try {
+                    d._def.button.onmouseup.call(d);
+                } catch(err) {
+                    console.log("Definition error: "+d.type+".onmouseup",err);
+                }
+            }
+            if (d.dirty) {
+                redraw();
+            }
+        } else {
+            RED.notify(RED._("notification.warning", {message:RED._("notification.warnings.nodeActionDisabled")}),"warning");
+        }
+        d3.event.preventDefault();
+    }
+
     function nodeButtonClicked(d) {
         if (!activeSubflow) {
             if (d._def.button.toggle) {
@@ -12823,8 +12879,23 @@ RED.view = (function() {
                             .attr("height",node_height-12)
                             .attr("fill",function(d) { return d._def.color;})
                             .attr("cursor","pointer")
-                            .on("mousedown",function(d) {if (!lasso && isButtonEnabled(d)) {focusView();d3.select(this).attr("fill-opacity",0.2);d3.event.preventDefault(); d3.event.stopPropagation();}})
-                            .on("mouseup",function(d) {if (!lasso && isButtonEnabled(d)) { d3.select(this).attr("fill-opacity",0.4);d3.event.preventDefault();d3.event.stopPropagation();}})
+                            .on("mousedown",function(d) {
+                                if (!lasso && isButtonEnabled(d)) {
+                                    focusView();
+                                    d3.select(this).attr("fill-opacity",0.2);
+                                    d3.event.preventDefault();
+                                    d3.event.stopPropagation();
+                                    nodeButtonMouseDown(d);
+                                }
+                            })
+                            .on("mouseup",function(d) {
+                                if (!lasso && isButtonEnabled(d)) {
+                                    d3.select(this).attr("fill-opacity",0.4);
+                                    d3.event.preventDefault();
+                                    d3.event.stopPropagation();
+                                    nodeButtonMouseUp(d);
+                                }
+                            })
                             .on("mouseover",function(d) {if (!lasso && isButtonEnabled(d)) { d3.select(this).attr("fill-opacity",0.4);}})
                             .on("mouseout",function(d) {if (!lasso && isButtonEnabled(d)) {
                                 var op = 1;
