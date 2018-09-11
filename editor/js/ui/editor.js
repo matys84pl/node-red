@@ -34,6 +34,7 @@ RED.editor = (function() {
      * @returns {boolean} whether the node is valid. Sets node.dirty if needed
      */
     function validateNode(node) {
+        console.error('validateNode')
         var oldValue = node.valid;
         var oldChanged = node.changed;
         node.valid = true;
@@ -43,17 +44,22 @@ RED.editor = (function() {
         if (node.type.indexOf("subflow:")===0) {
             subflow = RED.nodes.subflow(node.type.substring(8));
             isValid = subflow.valid;
+            console.error('subflow valid', isValid, subflow)
             hasChanged = subflow.changed;
             if (isValid === undefined) {
                 isValid = validateNode(subflow);
+                console.error('subflow valid 2', isValid)
                 hasChanged = subflow.changed;
             }
+            console.error('valid node props', validateNodeProperties(node, node._def.defaults, node))
             node.valid = isValid && validateNodeProperties(node, node._def.defaults, node);
+            if (!node.valid) console.error('invalid  1');
             node.changed = node.changed || hasChanged;
         } else if (node._def) {
             node.valid = validateNodeProperties(node, node._def.defaults, node);
             if (node._def._creds) {
                 node.valid = node.valid && validateNodeProperties(node, node._def.credentials, node._def._creds);
+                if (!node.valid) console.error('invalid  2');
             }
         } else if (node.type == "subflow") {
             var subflowNodes = RED.nodes.filterNodes({z:node.id});
@@ -65,6 +71,7 @@ RED.editor = (function() {
                     hasChanged = subflowNodes[i].changed;
                 }
                 node.valid = node.valid && isValid;
+                if (!node.valid) console.error('invalid  3');
                 node.changed = node.changed || hasChanged;
             }
             var subflowInstances = RED.nodes.filterNodes({type:"subflow:"+node.id});
@@ -72,6 +79,7 @@ RED.editor = (function() {
             for (i=0;i<subflowInstances.length;i++) {
                 console.error('subflowInstances[i]', subflowInstances[i])
                 subflowInstances[i].valid = node.valid;
+                if (!node.valid) console.error('invalid  4');
                 subflowInstances[i].changed = subflowInstances[i].changed || node.changed;
                 subflowInstances[i].dirty = true;
                 modifiedTabs[subflowInstances[i].z] = true;
@@ -106,6 +114,7 @@ RED.editor = (function() {
         for (var prop in definition) {
             if (definition.hasOwnProperty(prop)) {
                 if (!validateNodeProperty(node, definition, prop, properties[prop])) {
+                    console.error('prop invalid', prop)
                     isValid = false;
                 }
             }
@@ -1142,9 +1151,14 @@ RED.editor = (function() {
                             editing_node.changed = true;
                             RED.nodes.dirty(true);
 
-                            if (editing_node.action && editing_node.configNodeId) {
+                            if (editing_node.configNodeId) {
                                 var configNode = RED.nodes.getNode(editing_node.configNodeId);
-                                editing_node.name = '[' + editing_node.action.toUpperCase() + '] ' + configNode.name;
+                                if (editing_node.action) {
+                                    editing_node.name = '[' + editing_node.action.toUpperCase() + '] ' + configNode.name;
+                                } else {
+                                    editing_node.name = configNode.name;
+                                }
+
                             }
 
                             var activeSubflow = RED.nodes.subflow(RED.workspaces.active());
@@ -2259,6 +2273,7 @@ RED.editor = (function() {
 
         var checkValid = function() {
             var v = expressionEditor.getValue();
+            console.error('checkValid', v)
             try {
                 JSON.parse(v);
                 $("#node-dialog-ok").removeClass('disabled');

@@ -3,12 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="4fa78a8f-79ef-4478-b65b-86b441e718fa" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/editor/js/nodes.js" beforeDir="false" afterPath="$PROJECT_DIR$/editor/js/nodes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/editor/js/ui/view.js" beforeDir="false" afterPath="$PROJECT_DIR$/editor/js/ui/view.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/editor/js/ui/editor.js" beforeDir="false" afterPath="$PROJECT_DIR$/editor/js/ui/editor.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/red/red.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/red/red.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/red/red.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/red/red.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/red/api/admin/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/red/api/admin/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/red/runtime/nodes/Node.js" beforeDir="false" afterPath="$PROJECT_DIR$/red/runtime/nodes/Node.js" afterDir="false" />
     </list>
     <ignored path="node-red.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,11 +25,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="Node.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Node.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/red/runtime/nodes/Node.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="578">
-              <caret line="94" column="30" lean-forward="true" selection-start-line="94" selection-start-column="30" selection-end-line="94" selection-end-column="30" />
+            <state relative-caret-position="289">
+              <caret line="77" column="24" selection-start-line="77" selection-start-column="24" selection-end-line="77" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -58,8 +55,8 @@
       <file leaf-file-name="nodes.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/editor/js/nodes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="569">
-              <caret line="412" selection-start-line="412" selection-end-line="412" />
+            <state relative-caret-position="259">
+              <caret line="838" column="38" selection-start-line="838" selection-start-column="28" selection-end-line="838" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -92,9 +89,6 @@
                 <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#button#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#label#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#label#0;n#div#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#textarea#0;n#div#1;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#2;n#!!top" expanded="true" />
@@ -240,11 +234,16 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="editor.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="editor.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/editor/js/ui/editor.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="33269">
-              <caret line="1957" column="28" selection-start-line="1957" selection-start-column="28" selection-end-line="1957" selection-end-column="28" />
+            <state relative-caret-position="325">
+              <caret line="1742" column="63" lean-forward="true" selection-start-line="1742" selection-start-column="63" selection-end-line="1742" selection-end-column="63" />
+              <folding>
+                <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#label#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -280,17 +279,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>wtf?</find>
-      <find>&quot;reset</find>
-      <find>hasOwnProperty(&quot;reset&quot;)</find>
-      <find>execute</find>
-      <find>node.idList.length</find>
-      <find>delay</find>
-      <find>reset</find>
-      <find>clearDelayList</find>
-      <find>execut</find>
-      <find>&quot;input&quot;</find>
-      <find>console.error(</find>
       <find>timeout executed:</find>
       <find>timeout executed</find>
       <find>executed</find>
@@ -308,8 +296,19 @@
       <find>Math.random()</find>
       <find>handleInputRequest</find>
       <find>require(&quot;expres</find>
-      <find>express</find>
       <find>body-parser</find>
+      <find>express</find>
+      <find>valid</find>
+      <find>validateNode</find>
+      <find>consol.</find>
+      <find>getSubflow</find>
+      <find>.valid =</find>
+      <find>valid:</find>
+      <find>valid =</find>
+      <find>validate</find>
+      <find>valid =</find>
+      <find>configNOdeId</find>
+      <find>configNodeId</find>
     </findStrings>
     <replaceStrings>
       <replace>msg.reset</replace>
@@ -338,7 +337,6 @@
         <option value="$PROJECT_DIR$/red.js" />
         <option value="$PROJECT_DIR$/editor/templates/index.mst" />
         <option value="$PROJECT_DIR$/red/runtime/log.js" />
-        <option value="$PROJECT_DIR$/editor/js/ui/editor.js" />
         <option value="$PROJECT_DIR$/nodes/core/core/lib/debug/debug.js" />
         <option value="$PROJECT_DIR$/nodes/core/core/58-debug.html" />
         <option value="$PROJECT_DIR$/nodes/core/core/58-debug.js" />
@@ -351,6 +349,7 @@
         <option value="$PROJECT_DIR$/red/api/admin/index.js" />
         <option value="$PROJECT_DIR$/editor/js/nodes.js" />
         <option value="$PROJECT_DIR$/red/runtime/nodes/Node.js" />
+        <option value="$PROJECT_DIR$/editor/js/ui/editor.js" />
       </list>
     </option>
   </component>
@@ -370,7 +369,7 @@
       <path value="$PROJECT_DIR$/test/red/runtime/nodes/resources/local/TestNodeModule/node_modules/VersionMismatchModule/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-9" />
     <option name="y" value="-9" />
     <option name="width" value="1938" />
@@ -407,6 +406,14 @@
               <item name="editor" type="462c0819:PsiDirectoryNode" />
               <item name="js" type="462c0819:PsiDirectoryNode" />
               <item name="ui" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="node-red" type="b2602c69:ProjectViewProjectNode" />
+              <item name="node-red" type="462c0819:PsiDirectoryNode" />
+              <item name="editor" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+              <item name="ui" type="462c0819:PsiDirectoryNode" />
+              <item name="touch" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="node-red" type="b2602c69:ProjectViewProjectNode" />
@@ -615,7 +622,7 @@
       <workItem from="1535399338904" duration="1954000" />
       <workItem from="1535573858506" duration="4834000" />
       <workItem from="1536227336808" duration="1794000" />
-      <workItem from="1536327370128" duration="3403000" />
+      <workItem from="1536327370128" duration="6505000" />
     </task>
     <task id="LOCAL-00001" summary="An attempt to sort out configNodeId vs configNodeName">
       <created>1531513693873</created>
@@ -628,18 +635,18 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="99443000" />
+    <option name="totallyTimeSpent" value="102545000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1170" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.07086198" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2659968" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.50713503" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="7" visible="true" weight="0.23623623" />
+      <window_info anchor="bottom" id="Version Control" order="7" visible="true" weight="0.23623623" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.24588364" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
@@ -991,13 +998,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/editor/js/ui/editor.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="33269">
-          <caret line="1957" column="28" selection-start-line="1957" selection-start-column="28" selection-end-line="1957" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nodes/core/core/80-function.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3978">
@@ -1037,9 +1037,6 @@
             <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#button#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#label#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#label#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#textarea#0;n#div#1;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#2;n#!!top" expanded="true" />
@@ -1184,13 +1181,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/editor/js/nodes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="569">
-          <caret line="412" selection-start-line="412" selection-end-line="412" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/red/api/admin/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="433">
@@ -1200,8 +1190,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/red/runtime/nodes/Node.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="94" column="30" lean-forward="true" selection-start-line="94" selection-start-column="30" selection-end-line="94" selection-end-column="30" />
+        <state relative-caret-position="289">
+          <caret line="77" column="24" selection-start-line="77" selection-start-column="24" selection-end-line="77" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editor/js/nodes.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="838" column="38" selection-start-line="838" selection-start-column="28" selection-end-line="838" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/editor/js/ui/editor.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="1742" column="63" lean-forward="true" selection-start-line="1742" selection-start-column="63" selection-end-line="1742" selection-end-column="63" />
+          <folding>
+            <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#label#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
