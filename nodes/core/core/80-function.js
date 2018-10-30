@@ -57,6 +57,8 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
         var node = this;
         var config = RED.nodes.getNode(n.configNodeId);
+        //console.error('config node id', n.configNodeId, Boolean(config))
+
         this.name = n.name;
         this.func = n.func;
         var functionText = "var results = null;"+
@@ -232,7 +234,7 @@ module.exports = function(RED) {
             });
             this.on("input", function(msg) {
                 try {
-                    console.error('[function] ' + n.name);
+                    //console.error('[function] ' + n.name);
                     var start = process.hrtime();
                     context.msg = msg;
                     this.script.runInContext(context);

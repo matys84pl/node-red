@@ -46,11 +46,15 @@ function Node(n, runtime) {
         if (n.action && n.action.constructor === Array) {
             Log.error('actions is a constructor')
             //throw new Error('WTF?')
+
         }
-        Log.debug(`Creating new node subflow [${nodesCount}]`, {
+        Log.debug(`Creating new subflow node [${nodesCount}]`, {
             id: this.id,
+            name: this.name,
             myId: this.myId,
             type: this.type,
+            configNodeId: this.configNodeId,
+            configNodeName: this.configNodeName,
             hasRuntime: Boolean(this._adminApp)
         });
         nodesCount++;
@@ -61,10 +65,10 @@ function Node(n, runtime) {
         this._adminApp.post(`/nodeInput/${this.id}`, this.handleInputRequest.bind(this));
         this._adminApp.post(`/nodeStatus/${this.id}`, this.handleStatusRequest.bind(this));
 
-        Log.debug('Add handlers', {
+        /*Log.debug('Add handlers', {
             path: `/nodeInput/${this.id}`,
             myId: this.myId,
-        });
+        });*/
     } else if (this.type.split(':')[0] === 'subflow') {
         Log.error('HANDLERS NOT ADDED')
     }

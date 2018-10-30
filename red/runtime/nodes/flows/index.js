@@ -130,6 +130,8 @@ function load(forceStart) {
 function setFlows(_config, type, muteLog, forceStart) {
     type = type || "full";
 
+    console.error('setFlows', _config)
+
     var configSavePromise = null;
     var config = null;
     var diff;

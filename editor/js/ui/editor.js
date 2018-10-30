@@ -1732,6 +1732,7 @@ RED.editor = (function() {
 
                         if (newNodeConfigName != editing_node.configNodeName) {
                             changes['configNodeName'] = editing_node.configNodeName;
+                            editing_node.configNodeName = newNodeConfigName;
                             editing_node._def.configNodeName = newNodeConfigName;
                             editing_node._def.defaults.configNodeId = editing_node._def.defaults.configNodeName || {};
                             editing_node._def.defaults.configNodeId.type = newNodeConfigName;

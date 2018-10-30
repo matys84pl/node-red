@@ -331,13 +331,6 @@ function createSubflow(sf, sfn, subflows, globalSubflows, activeNodes, runtime) 
     var wires;
     var i, j, k;
 
-    Log.debug('Creating subflow', {
-        action: sfn.action,
-        actions: sfn.actions,
-        configNodeName: sfn.configNodeName,
-        configNodeId: sfn.configNodeId,
-    });
-
     var createNodeInSubflow = function (def) {
         node = clone(def);
         var nid = redUtil.generateId();
@@ -345,15 +338,21 @@ function createSubflow(sf, sfn, subflows, globalSubflows, activeNodes, runtime) 
         node._alias = node.id;
         node.id = nid;
         node.z = sfn.id;
-        node.configNodeName = sfn.configNodeName;
-        node.configNodeId = sfn.configNodeId;
+        node.configNodeName = sfn.configNodeName || def.configNodeName;
+        node.configNodeId = sfn.configNodeId || def.configNodeId;
         node.action = sfn.action;
-        debugger
         node.actions = sfn.actions;
         newNodes.push(node);
 
-        Log.debug('Creating node in subflow', node.id)
+        Log.debug(' Creating node in subflow (' + sfn.name + ')', {
+            id: nid,
+            name: node.name,
+            configNodeId: node.configNodeId,
+            configNodeName: node.configNodeName,
+            def: def,
+        })
     }
+
 
     // Clone all of the subflow node definitions and give them new IDs
     for (i in sf.configs) {
@@ -405,6 +404,7 @@ function createSubflow(sf, sfn, subflows, globalSubflows, activeNodes, runtime) 
         z: sfn.z,
         name: sfn.name,
         configNodeId: sfn.configNodeId,
+        configNodeId: sfn.configNodeName,
         isInject: sfn.isInject,
         action: _.head(_.flatten([sfn.action])), // take first as default
         wires: []
@@ -419,7 +419,14 @@ function createSubflow(sf, sfn, subflows, globalSubflows, activeNodes, runtime) 
     }
     var subflowNode = new Node(subflowInstance, runtime);
 
-    Log.debug('Subflow created', subflowInstance);
+    const subflowDef = subflows;//[sfn.type] || globalSubflows[sfn.type];
+    if (node.type.substring(0,8) == "subflow:") {
+        const type = node.type.substr(8);
+        const rootSubflow = subflows[type]  || globalSubflows[type];
+        console.error('YEAH!!!', rootSubflow);
+
+    }
+    //Log.debug('Subflow created', { type: sfn.type, globalSubflows: Object.keys(globalSubflows) });
 
 
     subflowNode.on("input", function (msg) {

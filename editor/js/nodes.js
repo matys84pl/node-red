@@ -505,16 +505,17 @@ RED.nodes = (function() {
         node.type = n.type;
         node.z = n.z;
 
-        /*if (node.type.split(':')[0] === 'subflow') {
+        if (node.type.split(':')[0] === 'subflow') {
+            console.error('isSubflow true')
             node.isInject = n.isInject;
-            //node.configNodeName = n.configNodeName;
-            if (n.action && n.action.constructor !== Array) {
+            node.configNodeName = n.configNodeName;
+            /*if (n.action && n.action.constructor !== Array) {
                 node.action = n.action;
             }
             if (n.configNodeId) {
                 node.configNodeId = n.configNodeId;
-            }
-        }*/
+            }*/
+        }
 
         if (node.type == "unknown") {
             for (var p in n._orig) {
@@ -590,7 +591,7 @@ RED.nodes = (function() {
         node.info = n.info;
         node.category = n.category;
         node.configNodeName = n.configNodeName;
-        //node.configNodeId = n.configNodeId;
+        node.configNodeId = n.configNodeId;
         node.isInject = n.isInject;
         node.action = n.action;
         node.in = [];
@@ -1077,8 +1078,7 @@ RED.nodes = (function() {
                         node.action = n.action;
                         node.isInject = n.isInject;
                         node.configNodeId = n.configNodeId;
-                        /*node.configNodeName = n.configNodeName;
-                        node.configNodeId = n.configNodeId;*/
+                        node.configNodeName = n.configNodeName;
                         console.error('assigned action', n.action)
                     } else {
                         if (!node._def) {
